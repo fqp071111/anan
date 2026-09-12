@@ -1,4 +1,5 @@
 name: anan
+
 on:
   schedule:
     - cron: '*/15 * * * *'
@@ -29,12 +30,14 @@ jobs:
 
           now = datetime.now(ZoneInfo("Asia/Shanghai"))
           hour = now.hour
+          manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
 
-          if hour < 7 or hour >= 23:
-              raise SystemExit
-          if random.random() > 0.09:
-              raise SystemExit
-          time.sleep(random.randint(0, 60))
+          if not manual:
+              if hour < 7 or hour >= 23:
+                  raise SystemExit
+              if random.random() > 0.09:
+                  raise SystemExit
+              time.sleep(random.randint(0, 60))
 
           def get(url):
               return urllib.request.urlopen(url, timeout=20).read().decode()
