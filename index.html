@@ -10,7 +10,7 @@ body{margin:0;min-height:100vh;padding:36px 18px 70px;font:16px/1.85 -apple-syst
 h1{font-size:13px;letter-spacing:5px;color:#5b7bb0;font-weight:600;margin:0 0 24px;text-align:center}
 #a>div{position:relative;background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border-radius:22px;padding:16px 18px;margin-bottom:12px;box-shadow:0 10px 30px rgba(43,84,150,.13),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -10px 20px rgba(255,255,255,.35);overflow:hidden}
 #a>div>div:first-child{color:#7a93bf;font-size:12px;margin-bottom:7px;letter-spacing:.5px}
-#n{text-align:center;margin:0 0 22px}
+#n{display:none;text-align:center;margin:0 0 22px}
 #n button{font:14px/1 -apple-system,sans-serif;color:#fff;background:linear-gradient(180deg,#7aa7ff,#5b8cf0);border:0;border-radius:14px;padding:12px 22px;box-shadow:0 8px 20px rgba(70,120,220,.28)}
 #out{display:none;width:100%;height:130px;margin:0 0 20px;font:12px/1.5 ui-monospace,monospace;color:#33456b;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);border-radius:14px;padding:10px}
 </style>
@@ -25,16 +25,17 @@ fetch('data/dynamics.json?t='+Date.now()).then(function(r){return r.json()}).the
 d.reverse();
 document.getElementById('a').innerHTML=d.map(function(x){return '<div><div class=b>'+x.time+'</div>'+x.text+'</div>'}).join('');
 }).catch(function(){});
-if(!('serviceWorker' in navigator)||!('PushManager' in window)){document.getElementById('b').style.display='none'}
-document.getElementById('b').onclick=function(){
-  var btn=this;
-  btn.textContent='...';
+var N=document.getElementById('n'),B=document.getElementById('b');
+function showB(){N.style.display='block'}
+function hideB(){N.style.display='none'}
+function tap(){
+  B.textContent='...';
   navigator.serviceWorker.register('./sw.js').then(function(){
     return navigator.serviceWorker.ready;
   }).then(function(){
     return Notification.requestPermission();
   }).then(function(p){
-    if(p!=='granted'){btn.textContent='被拒绝了';return}
+    if(p!=='granted'){B.textContent='被拒绝了';return}
     return navigator.serviceWorker.ready.then(function(r){
       return r.pushManager.getSubscription().then(function(s){
         if(s)return s;
@@ -45,10 +46,21 @@ document.getElementById('b').onclick=function(){
         o.value=JSON.stringify(s);
         o.select();
         try{document.execCommand('copy')}catch(e){}
-        btn.textContent='已复制，发给刘耀文';
+        B.textContent='已复制，发给刘耀文';
         o.onclick=function(){o.select();try{document.execCommand('copy')}catch(e){}};
       });
     });
-  }).catch(function(e){btn.textContent='失败:'+e.message});
-};
+  }).catch(function(e){B.textContent='失败:'+e.message});
+}
+if(!('serviceWorker' in navigator)||!('PushManager' in window)){hideB()}
+else{
+  navigator.serviceWorker.register('./sw.js').then(function(){return navigator.serviceWorker.ready}).then(function(r){return r.pushManager.getSubscription()}).then(function(s){
+    if(s){hideB()}else{B.onclick=tap;showB()}
+  }).catch(function(){B.onclick=tap;showB()});
+}
+var HT=document.querySelector('h1'),TM;
+function pd(){TM=setTimeout(function(){B.onclick=tap;B.textContent='开启通知';showB()},1500)}
+HT.addEventListener('touchstart',pd);
+HT.addEventListener('touchend',function(){clearTimeout(TM)});
+HT.addEventListener('touchcancel',function(){clearTimeout(TM)});
 </script>
