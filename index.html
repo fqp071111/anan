@@ -7,9 +7,10 @@ h1{font-size:13px;color:#7a7a7a;font-weight:400;letter-spacing:3px;margin:0 0 20
 .t{color:#6b6b6b;font-size:12px;margin-bottom:7px}
 </style>
 <h1>他 的 动 态</h1>
-<div id=a></div>
+<div id="a"></div>
 <script>
-fetch('data/dynamics.json?t='+Date.now()).then(r=>r.json()).then(d=>{
-a.innerHTML=d.slice().reverse().map(x=><div class="c"><div clas​s="t">${x.time}</div>${x​.text}</div>).join('')
-})
+fetch('data/dynamics.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
+d.reverse();
+document.getElementById('a').innerHTML=d.map(function(x){return '<div class="c"><div class="t">'+x.time+'</div>'+x.text+'</div>'}).join('');
+});
 </script>
