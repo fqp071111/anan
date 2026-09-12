@@ -35,7 +35,7 @@ jobs:
           if not manual:
               if hour < 7 or hour >= 23:
                   raise SystemExit
-              if random.random() > 0.09:
+              if random.random() > 0.2:
                   raise SystemExit
               time.sleep(random.randint(0, 60))
 
