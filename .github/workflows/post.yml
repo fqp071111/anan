@@ -1,0 +1,25 @@
+name: post
+on:
+  repository_dispatch:
+    types: [post]
+permissions:
+  contents: write
+jobs:
+  p:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          K: ${{ github.event.client_payload.kind }}
+          T: ${{ github.event.client_payload.text }}
+          M: ${{ github.event.client_payload.time }}
+        run: |
+          mkdir -p data
+          test -s data/dynamics.json || echo '[]' > data/dynamics.json
+          jq --arg k "$K" --arg t "$T" --arg m "$M" '.+[{kind:$k,text:$t,time:$m}]' data/dynamics.json > t.json
+          mv t.json data/dynamics.json
+          git config user.name bot
+          git config user.email bot@users.noreply.github.com
+          git add -A
+          git commit -m post || true
+          git push
