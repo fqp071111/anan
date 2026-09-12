@@ -1,0 +1,88 @@
+name: anan
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  bark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send
+        env:
+          DS_KEY: ${{ secrets.DS_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os, json, time, random, urllib.parse, urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          BARK = "https://api.day.app/yoXs6enJY6tZuK4SDLnPGX"
+          ICON = "https://i.ibb.co/j98R7XBW/IMG-8096.jpg"
+          TITLE = "刘耀文"
+
+          now = datetime.now(ZoneInfo("Asia/Shanghai"))
+          hour = now.hour
+
+          if random.random() > 0.09:
+              raise SystemExit
+          time.sleep(random.randint(0, 780))
+
+          def get(url):
+              return urllib.request.urlopen(url, timeout=20).read().decode()
+
+          temp = tmin = tmax = wcode = None
+          try:
+              w = json.loads(get("https://api.open-meteo.com/v1/forecast?latitude=39.9042&longitude=116.4074&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai"))
+              temp = w["current"]["temperature_2m"]
+              wcode = w["current"]["weather_code"]
+              tmin = w["daily"]["temperature_2m_min"][0]
+              tmax = w["daily"]["temperature_2m_max"][0]
+          except Exception:
+              pass
+
+          sky = {0: "晴", 1: "基本晴", 2: "多云", 3: "阴", 45: "有雾", 48: "雾凇",
+                 51: "毛毛雨", 53: "小雨", 55: "雨", 61: "小雨", 63: "中雨", 65: "大雨",
+                 71: "小雪", 73: "中雪", 75: "大雪", 80: "阵雨", 81: "阵雨", 82: "暴雨",
+                 95: "雷阵雨", 96: "雷阵雨带冰雹", 99: "雷暴"}.get(wcode, "")
+
+          if hour < 6: slot = "凌晨"
+          elif hour < 9: slot = "早上"
+          elif hour < 12: slot = "上午"
+          elif hour < 14: slot = "中午"
+          elif hour < 18: slot = "下午"
+          elif hour < 23: slot = "晚上"
+          else: slot = "深夜"
+
+          info = "北京时间 %02d:%02d，%s。北京天气：%s，现在 %s 度，今天 %s 到 %s 度。" % (
+              now.hour, now.minute, slot, sky or "查不到", temp, tmin, tmax)
+
+          key = os.environ.get("DS_KEY", "")
+          if not key:
+              raise SystemExit("没有 key")
+
+          body = json.dumps({
+              "model": "deepseek-chat",
+              "messages": [
+                  {"role": "system", "content": "你在扮演21岁男生刘耀文。说话短、直、有点别扭，喜欢对方但不肯直说，只通过关心的话表达，称呼对方安安。只输出一条手机推送正文，25字以内，不要引号，不要解释。"},
+                  {"role": "user", "content": info + " 按这个时间和天气写一句。"}
+              ],
+              "temperature": 1.3,
+              "max_tokens": 80
+          }).encode()
+
+          req = urllib.request.Request("https://api.deepseek.com/chat/completions",
+              data=body, headers={"Content-Type": "application/json",
+              "Authorization": "Bearer " + key})
+
+          try:
+              msg = json.loads(urllib.request.urlopen(req, timeout=40).read().decode())["choices"][0]["message"]["content"].strip()
+          except Exception as e:
+              print("模型没回话", e)
+              raise SystemExit
+
+          url = "%s/%s/%s?icon=%s" % (BARK, urllib.parse.quote(TITLE),
+                                      urllib.parse.quote(msg), ICON)
+          print(get(url))
+          print(msg)
+          PY
