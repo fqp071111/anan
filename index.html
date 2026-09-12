@@ -1,16 +1,17 @@
-<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>
 <title>动态</title>
 <style>
-body{background:#0c0c0e;color:#ececec;font:16px/1.75 -apple-system,sans-serif;margin:0;padding:26px 18px 60px}
-h1{font-size:13px;color:#7a7a7a;font-weight:400;letter-spacing:3px;margin:0 0 20px}
-.c{background:#17171a;border-radius:16px;padding:14px 16px;margin-bottom:11px}
-.t{color:#6b6b6b;font-size:12px;margin-bottom:7px}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:34px 18px 70px;font:16px/1.85 -apple-system,sans-serif;color:#f3eef9;background:#0b0a12;background-image:radial-gradient(760px 460px at 10% -8%,#3b2a5e 0%,transparent 62%),radial-gradient(680px 430px at 96% 6%,#5d2a4b 0%,transparent 60%),radial-gradient(900px 560px at 50% 110%,#1c2c55 0%,transparent 65%);background-attachment:fixed}
+h1{font-size:12px;letter-spacing:4px;color:#b3a5cf;font-weight:400;margin:0 0 22px}
+#a>div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px;padding:15px 17px;margin-bottom:11px;box-shadow:0 10px 26px rgba(0,0,0,.3)}
+#a>div>div:first-child{color:#b3a5cf;font-size:12px;margin-bottom:7px}
 </style>
 <h1>他 的 动 态</h1>
-<div id="a"></div>
+<div id=a></div>
 <script>
 fetch('data/dynamics.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
 d.reverse();
-document.getElementById('a').innerHTML=d.map(function(x){return '<div class="c"><div class="t">'+x.time+'</div>'+x.text+'</div>'}).join('');
+document.getElementById('a').innerHTML=d.map(function(x){return '<div><div class=b>'+x.time+'</div>'+x.text+'</div>'}).join('');
 });
 </script>
