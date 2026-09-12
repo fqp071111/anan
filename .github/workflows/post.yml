@@ -34,3 +34,7 @@ jobs:
           git add -A
           git commit -m update || true
           git push
+           if [ -s data/subscription.json ]; then
+            pip install -q pywebpush
+            python3 data/push.py
+          fi
