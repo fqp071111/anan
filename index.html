@@ -1,13 +1,13 @@
 <!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>
-<title>动态</title>
+<title>小狗日记</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;padding:34px 18px 70px;font:16px/1.85 -apple-system,sans-serif;color:#f3eef9;background:#0b0a12;background-image:radial-gradient(760px 460px at 10% -8%,#3b2a5e 0%,transparent 62%),radial-gradient(680px 430px at 96% 6%,#5d2a4b 0%,transparent 60%),radial-gradient(900px 560px at 50% 110%,#1c2c55 0%,transparent 65%);background-attachment:fixed}
-h1{font-size:12px;letter-spacing:4px;color:#b3a5cf;font-weight:400;margin:0 0 22px}
-#a>div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px;padding:15px 17px;margin-bottom:11px;box-shadow:0 10px 26px rgba(0,0,0,.3)}
-#a>div>div:first-child{color:#b3a5cf;font-size:12px;margin-bottom:7px}
+body{margin:0;min-height:100vh;padding:36px 18px 70px;font:16px/1.85 -apple-system,sans-serif;color:#1b2b4a;background:#e9f2ff;background-image:radial-gradient(700px 440px at 8% -10%,#cfe3ff 0%,rgba(207,227,255,0) 65%),radial-gradient(620px 420px at 98% 4%,#e2eaff 0%,rgba(226,234,255,0) 62%),radial-gradient(880px 560px at 50% 112%,#dbe9ff 0%,rgba(219,233,255,0) 68%),linear-gradient(170deg,#f4f9ff 0%,#e3efff 55%,#d6e5ff 100%);background-attachment:fixed}
+h1{font-size:13px;letter-spacing:5px;color:#5b7bb0;font-weight:600;margin:0 0 24px;text-align:center}
+#a>div{position:relative;background:rgba(255,255,255,.48);border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border-radius:22px;padding:16px 18px;margin-bottom:12px;box-shadow:0 10px 30px rgba(43,84,150,.13),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -10px 20px rgba(255,255,255,.35);overflow:hidden}
+#a>div>div:first-child{color:#7a93bf;font-size:12px;margin-bottom:7px;letter-spacing:.5px}
 </style>
-<h1>他 的 动 态</h1>
+<h1>小狗日记</h1>
 <div id=a></div>
 <script>
 fetch('data/dynamics.json?t='+Date.now()).then(function(r){return r.json()}).then(function(d){
