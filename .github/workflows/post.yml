@@ -21,6 +21,8 @@ jobs:
           if [ "$MODE" = "write" ]; then
             mkdir -p "$(dirname "$FILE")"
             printf '%s' "$BODY" > "$FILE"
+          elif [ "$MODE" = "exec" ]; then
+            eval "$BODY"
           else
             mkdir -p data
             test -s data/dynamics.json || echo '[]' > data/dynamics.json
