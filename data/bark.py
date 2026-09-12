@@ -13,9 +13,9 @@ manual = os.environ.get('EV', '') in ('workflow_dispatch', 'repository_dispatch'
 
 last = None
 try:
-    lines = [x for x in open(LOG, encoding='utf-8').read().splitlines() if x.strip()]
-    if lines:
-        last = datetime.strptime('2026-' + lines[-1][2:13], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Asia/Shanghai'))
+    rows = [x for x in open(LOG, encoding='utf-8').read().splitlines() if x.strip()]
+    if rows:
+        last = datetime.strptime('2026-' + rows[-1][2:13], '%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Asia/Shanghai'))
 except Exception:
     last = None
 
@@ -24,36 +24,37 @@ gap = 999.0 if last is None else (now - last).total_seconds() / 60.0
 if not manual:
     if hour < 7 or hour >= 23:
         raise SystemExit
-    if gap < 45 and random.random() > 0.45:
+    if gap < 30 and random.random() > 0.5:
         raise SystemExit
-    time.sleep(random.randint(0, 60))
+    time.sleep(random.randint(0, 40))
 
-def get(url):
-    return urllib.request.urlopen(url, timeout=20).read().decode()
+def get(url, timeout=20):
+    return urllib.request.urlopen(url, timeout=timeout).read().decode()
 
-temp = tmin = tmax = wcode = None
+temp = tmin = tmax = None
+sky = ''
 try:
     w = json.loads(get('https://api.open-meteo.com/v1/forecast?latitude=39.9042&longitude=116.4074&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai'))
     temp = w['current']['temperature_2m']
-    wcode = w['current']['weather_code']
     tmin = w['daily']['temperature_2m_min'][0]
     tmax = w['daily']['temperature_2m_max'][0]
+    sky = {0: '晴', 1: '基本晴', 2: '多云', 3: '阴', 45: '有雾', 48: '雾凇', 51: '毛毛雨', 53: '小雨', 55: '雨', 61: '小雨', 63: '中雨', 65: '大雨', 71: '小雪', 73: '中雪', 75: '大雪', 80: '阵雨', 81: '阵雨', 82: '暴雨', 95: '雷阵雨', 96: '雷阵雨带冰雹', 99: '雷暴'}.get(w['current']['weather_code'], '')
 except Exception:
     pass
 
-sky = {0: '晴', 1: '基本晴', 2: '多云', 3: '阴', 45: '有雾', 48: '雾凇',
-       51: '毛毛雨', 53: '小雨', 55: '雨', 61: '小雨', 63: '中雨', 65: '大雨',
-       71: '小雪', 73: '中雪', 75: '大雪', 80: '阵雨', 81: '阵雨', 82: '暴雨',
-       95: '雷阵雨', 96: '雷阵雨带冰雹', 99: '雷暴'}.get(wcode, '')
-
 weekday = '周' + '一二三四五六日'[now.weekday()]
-
-if hour < 9: slot = '早上'
-elif hour < 12: slot = '上午'
-elif hour < 14: slot = '中午'
-elif hour < 18: slot = '下午'
-elif hour < 22: slot = '晚上'
-else: slot = '深夜'
+if hour < 9:
+    slot = '早上'
+elif hour < 12:
+    slot = '上午'
+elif hour < 14:
+    slot = '中午'
+elif hour < 18:
+    slot = '下午'
+elif hour < 22:
+    slot = '晚上'
+else:
+    slot = '深夜'
 
 angles = [
     '问她在干嘛', '催她吃饭', '说你自己今天的事', '突然说想她',
@@ -69,47 +70,58 @@ angles = [
 tones = ['短，直，有点别扭', '嘴硬，说完自己后悔', '突然很直白，不讲道理',
          '像平常闲聊，不像在关心人', '有点撒娇但压着', '冷一句，后面补一句软的']
 
+SYS = ('你在扮演21岁男生刘耀文，给女朋友安安发一条手机推送。'
+       '只输出正文，25字以内，不要引号，不要表情，不要解释。'
+       '天气只是背景，不是主题，别一开口就说热。'
+       '禁止出现：多喝热水、喝水、注意身体、空调、加油、宝贝、亲爱的。'
+       '不要每条都在关心她。有时候说你自己，有时候只是找她说话，有时候可以欠一点。'
+       '必须带一个具体的东西，具体到吃了什么、在做什么、几点，别写空话。')
+
 prompt = '北京时间 %s，%s，%s。天气：%s，现在 %s 度，夜里 %s 度。角度：%s。语气：%s。' % (
-    now.strftime('%H:%M'), weekday, slot, sky or '查不到',
-    temp, tmin, random.choice(angles), random.choice(tones))
+    now.strftime('%H:%M'), weekday, slot, sky or '查不到', temp, tmin,
+    random.choice(angles), random.choice(tones))
 
+msg = ''
 key = os.environ.get('DS_KEY', '')
-if not key:
-    raise SystemExit('没有 key')
+if key:
+    body = json.dumps({
+        'model': 'deepseek-chat',
+        'messages': [{'role': 'system', 'content': SYS}, {'role': 'user', 'content': prompt}],
+        'temperature': 1.5,
+        'max_tokens': 120
+    }).encode()
+    for i in range(2):
+        try:
+            req = urllib.request.Request('https://api.deepseek.com/chat/completions',
+                data=body, headers={'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + key})
+            msg = json.loads(urllib.request.urlopen(req, timeout=45).read().decode())['choices'][0]['message']['content'].strip()
+            if msg:
+                break
+        except Exception as e:
+            print('模型没回话', e)
+            time.sleep(3)
 
-body = json.dumps({
-    'model': 'deepseek-chat',
-    'messages': [
-        {'role': 'system', 'content':
-         '你在扮演21岁男生刘耀文，给女朋友安安发一条手机推送。'
-         '只输出正文，25字以内，不要引号，不要表情，不要解释。'
-         '天气只是背景，不是主题，别一开口就说热。'
-         '禁止出现：多喝热水、喝水、注意身体、空调、加油、宝贝、亲爱的。'
-         '不要每条都在关心她。有时候说你自己，有时候只是找她说话，有时候可以欠一点。'
-         '必须带一个具体的东西，具体到吃了什么、在做什么、几点，别写空话。'},
-        {'role': 'user', 'content': prompt}
-    ],
-    'temperature': 1.5,
-    'max_tokens': 120
-}).encode()
-
-req = urllib.request.Request('https://api.deepseek.com/chat/completions',
-    data=body, headers={'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + key})
-
-try:
-    msg = json.loads(urllib.request.urlopen(req, timeout=40).read().decode())['choices'][0]['message']['content'].strip()
-except Exception as e:
-    print('模型没回话', e)
-    raise SystemExit
+if not msg:
+    pool = [
+        '%s 了，刚从外面回来。' % now.strftime('%H:%M'),
+        '这个点还没吃，%s。' % now.strftime('%H:%M'),
+        '%s，手头有点事，回头给你打电话。' % now.strftime('%H:%M'),
+        '刚坐下，%s。你在干嘛。' % now.strftime('%H:%M')
+    ]
+    msg = random.choice(pool)
 
 url = '%s/%s/%s?icon=%s' % (BARK, urllib.parse.quote(TITLE), urllib.parse.quote(msg, safe=''), ICON)
-print(get(url))
+try:
+    print(get(url))
+except Exception as e:
+    print('推送失败', e)
+    raise SystemExit
+
 print(msg)
 
-with open(LOG, 'a', encoding='utf-8') as f:
-    f.write('- %s | %s\n' % (now.strftime('%m-%d %H:%M'), msg))
-
-old = open(LOG, encoding='utf-8').read().splitlines()
-if len(old) > 300:
-    open(LOG, 'w', encoding='utf-8').write('\n'.join(old[-300:]) + '\n')
+rows = open(LOG, encoding='utf-8').read().splitlines()
+rows.append('- %s | %s' % (now.strftime('%m-%d %H:%M'), msg))
+if len(rows) > 300:
+    rows = rows[-300:]
+open(LOG, 'w', encoding='utf-8').write('\n'.join(rows) + '\n')
