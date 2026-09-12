@@ -24,7 +24,7 @@ jobs:
           now = datetime.now(ZoneInfo("Asia/Shanghai"))
           hour = now.hour
 
-          if random.random() > 0.09:
+          if random.random() > 0.99:
               raise SystemExit
           time.sleep(random.randint(0, 780))
 
