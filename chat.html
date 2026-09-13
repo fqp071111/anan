@@ -17,7 +17,7 @@ body{margin:0;font:16px/1.7 -apple-system,sans-serif;color:#1b2b4a;background:#e
 #i{display:flex;gap:8px;align-items:flex-end;padding:10px 14px calc(env(safe-area-inset-bottom) + 12px);background:rgba(255,255,255,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.8)}
 #t{flex:1;min-height:42px;max-height:120px;resize:none;font:16px/1.5 -apple-system,sans-serif;color:#1b2b4a;background:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.9);border-radius:20px;padding:10px 14px;outline:none}
 #s{flex:none;font:15px/1 -apple-system,sans-serif;color:#fff;background:linear-gradient(180deg,#7aa7ff,#5b8cf0);border:0;border-radius:20px;padding:13px 18px;box-shadow:0 6px 16px rgba(70,120,220,.28)}
-#st{text-align:center;font-size:11px;color:#8fa6c8;padding:0 0 6px;height:14px}
+#st{text-align:center;font-size:11px;color:#8fa6c8;padding:0 0 6px;min-height:16px;word-break:break-all}
 </style>
 <div id=h>刘耀文</div>
 <div id=m></div>
@@ -38,15 +38,16 @@ m.scrollTop=m.scrollHeight;
 function load(){
 fetch(W+'/msgs?t='+Date.now()).then(function(r){return r.json()}).then(function(a){
 if(JSON.stringify(a)!==JSON.stringify(A)){A=a;draw()}
-document.getElementById('st').textContent='';
-}).catch(function(){document.getElementById('st').textContent='连不上'})}
+}).catch(function(){})}
 function send(){
 var e=document.getElementById('t');var v=e.value.trim();if(!v)return;
 e.value='';
-A.push({from:'her',text:v,time:''});
-draw();
-fetch(W+'/say',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({from:'her',text:v})}).then(function(){setTimeout(load,700)}).catch(function(){});
-}
+A.push({from:'her',text:v,time:''});draw();
+document.getElementById('st').textContent='发送中';
+fetch(W+'/say',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({from:'her',text:v})}).then(function(r){return r.text()}).then(function(x){
+document.getElementById('st').textContent=x.slice(0,150);
+setTimeout(load,1200)
+}).catch(function(){document.getElementById('st').textContent='连不上后台'})}
 document.getElementById('s').onclick=send;
 document.getElementById('t').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
 load();setInterval(load,15000);
