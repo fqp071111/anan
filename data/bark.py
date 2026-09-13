@@ -125,3 +125,5 @@ rows.append('- %s | %s' % (now.strftime('%m-%d %H:%M'), msg))
 if len(rows) > 300:
     rows = rows[-300:]
 open(LOG, 'w', encoding='utf-8').write('\n'.join(rows) + '\n')
+
+import json as _j,os as _o;_p='data/dynamics.json';_d=_j.load(open(_p,encoding='utf-8')) if _o.path.exists(_p) else [];_d=_d if isinstance(_d,list) else [];_d.append({'kind':'dynamic','text':msg,'time':now.strftime('%m-%d %H:%M')});_d=_d[-200:];open(_p,'w',encoding='utf-8').write(_j.dumps(_d,ensure_ascii=False,separators=(',',':')));_s='data/subscription.json';(_o.path.exists(_s) and _o.path.getsize(_s)>2) and __import__('subprocess').run('pip install -q pywebpush && python3 data/push.py',shell=True)
