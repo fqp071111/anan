@@ -1,0 +1,131 @@
+<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1,viewport-fit=cover'>
+<title>刘耀文</title>
+<link rel=apple-touch-icon href=./apple-touch-icon.png>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-title content=刘耀文>
+<meta name=theme-color content=#e9f2ff>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;font:16px/1.7 -apple-system,sans-serif;color:#1b2b4a;background:#e9f2ff;background-image:radial-gradient(700px 440px at 8% -10%,#cfe3ff 0%,rgba(207,227,255,0) 65%),radial-gradient(620px 420px at 98% 4%,#e2eaff 0%,rgba(226,234,255,0) 62%),linear-gradient(170deg,#f4f9ff 0%,#e3efff 55%,#d6e5ff 100%);background-attachment:fixed;display:flex;flex-direction:column;overscroll-behavior:none}
+#h{padding:calc(env(safe-area-inset-top) + 14px) 18px 8px;text-align:center;font-size:13px;letter-spacing:5px;color:#5b7bb0;font-weight:600}
+#h i{font-style:normal;font-size:9px;letter-spacing:0;color:#a8bcd8;vertical-align:super}
+#tabs{display:flex;gap:8px;padding:0 14px 10px}
+#tabs div{flex:1;text-align:center;font-size:13px;padding:8px 0;border-radius:14px;color:#5b7bb0;background:rgba(255,255,255,.5)}
+#tabs div.on{background:linear-gradient(180deg,#7aa7ff,#5b8cf0);color:#fff}
+#m{flex:1;overflow-y:auto;padding:4px 14px 12px;-webkit-overflow-scrolling:touch}
+.r{margin:0 0 10px;display:flex}
+.r.me{justify-content:flex-end}
+.b{max-width:80%;padding:11px 15px;border-radius:20px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);box-shadow:0 8px 22px rgba(43,84,150,.10);white-space:pre-wrap;word-break:break-word}
+.r.me .b{background:linear-gradient(180deg,#7aa7ff,#5b8cf0);color:#fff;border:0}
+.r.no .b{background:rgba(255,255,255,.4);border-style:dashed;color:#7d8ea8}
+.t{font-size:11px;color:#8fa6c8;margin:0 0 4px}
+.t2{font-size:11px;color:#c47a7a;margin:5px 0 0}
+.card{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);border-radius:18px;padding:12px 14px;margin:0 0 12px;box-shadow:0 8px 22px rgba(43,84,150,.10)}
+.who{font-size:11px;color:#8fa6c8;margin:0 0 6px}
+.cm{background:rgba(255,255,255,.72);border-radius:14px;padding:8px 11px;margin:8px 0 0;font-size:14px;white-space:pre-wrap;word-break:break-word}
+.cm b{color:#5b8cf0}
+#i{display:flex;gap:8px;align-items:flex-end;padding:10px 14px calc(env(safe-area-inset-bottom) + 12px);background:rgba(255,255,255,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.8)}
+#t{flex:1;min-height:42px;max-height:120px;resize:none;font:16px/1.5 -apple-system,sans-serif;color:#1b2b4a;background:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.9);border-radius:20px;padding:10px 14px;outline:none}
+#s{flex:none;font:15px/1 -apple-system,sans-serif;color:#fff;background:linear-gradient(180deg,#7aa7ff,#5b8cf0);border:0;border-radius:20px;padding:13px 18px;box-shadow:0 6px 16px rgba(70,120,220,.28)}
+#st{text-align:center;font-size:11px;color:#8fa6c8;padding:0 0 6px;min-height:16px;word-break:break-all}
+</style>
+<div id=h>刘耀文 <i>v9</i></div>
+<div id=tabs><div id=tab1 class=on>聊</div><div id=tab2>动态</div></div>
+<div id=m></div>
+<div id=st></div>
+<div id=i><textarea id=t rows=1 placeholder='跟他说点什么'></textarea><button id=s>发送</button></div>
+<script>
+var W='https://purple-brook-9d91anan.fqp071111.workers.dev';
+var S={msgs:[],out:[]};
+var K='chat',RE=-1,TB=1;
+try{var Q=JSON.parse(localStorage.getItem('liu')||'{}');if(Q&&Q.msgs)S.msgs=Q.msgs;if(Q&&Q.out)S.out=Q.out}catch(e){}
+function save(){try{localStorage.setItem('liu',JSON.stringify(S))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function mark(o){return o.kind==='chat'?o.text:(o.kind==='post'?'/p/'+o.text:'/c/'+o.re+'/'+o.text)}
+function posts(){
+var P=[],i,e,tx;
+for(i=0;i<S.msgs.length;i++){e=S.msgs[i];tx=e.text||'';
+if(tx.indexOf('/d/')===0)continue;
+if(tx.indexOf('/p/')===0){P.push({from:e.from,time:e.time||'',text:tx.slice(3),cmts:[]})}
+else if(tx.indexOf('/c/')===0){var r=tx.slice(3).split('/');var n=parseInt(r.shift(),10);var c=r.join('/');
+if(P[n])P[n].cmts.push({from:e.from,text:c,time:e.time||''})}}
+for(i=0;i<S.out.length;i++){var o=S.out[i];
+if(o.kind==='post')P.push({from:'her',time:'还没送到',text:o.text,cmts:[],pend:1});
+else if(o.kind==='cmt'&&P[o.re])P[o.re].cmts.push({from:'her',text:o.text,time:'还没送到',pend:1})}
+return P;
+}
+function draw(){
+var m=document.getElementById('m'),h='',i,j,e,tx,o,p,c;
+if(TB===1){
+for(i=0;i<S.msgs.length;i++){e=S.msgs[i];tx=e.text||'';
+if(tx.charAt(0)==='/')continue;
+h+='<div class="r'+(e.from==='me'?'':' me')+'"><div><div class=t>'+esc(e.time||'')+'</div><div class=b>'+esc(tx)+'</div></div></div>'}
+for(i=0;i<S.out.length;i++){o=S.out[i];
+if(o.kind!=='chat')continue;
+h+='<div class="r me no"><div><div class=t>还没送到</div><div class=b>'+esc(o.text)+'</div><div class=t2 onclick="again('+i+')">点这里重发</div></div></div>'}
+if(!h)h='<div class=r><div><div class=t>等着</div><div class=b>底下打字，点发送。你写的话先住在你手机里，丢不了。</div></div></div>';
+}else{
+var P=posts();
+for(i=0;i<P.length;i++){p=P[i];
+h+='<div class=card><div class=who>'+(p.from==='me'?'刘耀文':'你')+' · '+esc(p.time)+'</div><div class=b>'+esc(p.text)+'</div>';
+for(j=0;j<p.cmts.length;j++){c=p.cmts[j];h+='<div class=cm><b>'+(c.from==='me'?'刘耀文':'你')+'</b> '+esc(c.text)+'</div>'}
+h+='<div class=t2 onclick="rep('+i+')">评论</div></div>'}
+if(!h)h='<div class=r><div><div class=t>还没人说话</div><div class=b>底下打一句，就是一条动态。你发，我评论。</div></div></div>';
+}
+m.innerHTML=h;m.scrollTop=m.scrollHeight;
+document.getElementById('t').placeholder=(K==='cmt')?'回他这一条':'跟他说点什么';
+}
+function T(u,ms){return Promise.race([fetch(u,{cache:'no-store'}),new Promise(function(_,r){setTimeout(function(){r(new Error('slow'))},ms)})])}
+function img(m){try{var im=new Image();im.src=W+'/say?from=her&t='+Date.now()+'&text='+encodeURIComponent(m.slice(0,900))}catch(e){}}
+function sb(m){try{if(navigator.sendBeacon)navigator.sendBeacon(W+'/say?from=her&text='+encodeURIComponent(m.slice(0,900)))}catch(e){}}
+function nc(m){try{fetch(W+'/say?from=her&t='+Date.now()+'&text='+encodeURIComponent(m.slice(0,900)),{mode:'no-cors',cache:'no-store'}).catch(function(){})}catch(e){}}
+function merge(a,fresh){
+S.msgs=a;
+if(fresh){var tail=[],i;for(i=Math.max(0,a.length-25);i<a.length;i++)tail.push(a[i].text||'');
+S.out=S.out.filter(function(o){return tail.indexOf(mark(o))<0});
+save();draw();
+document.getElementById('st').textContent=S.out.length?('还有 '+S.out.length+' 条没送到'):'';
+}
+function pull(cb){
+T(W+'/msgs?t='+Date.now(),8000).then(function(r){return r.json()}).then(function(a){
+if(!Array.isArray(a))throw new Error('bad');merge(a,1);if(cb)cb(1)
+}).catch(function(){
+fetch('./data/chat.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(a){
+if(Array.isArray(a))merge(a,0);
+if(cb)cb(0)
+}).catch(function(){if(cb)cb(0)})
+})
+}
+function retry(){
+var n=0,i,o,t;
+for(i=0;i<S.out.length;i++){o=S.out[i];t=o.tries||0;
+if(t<3){if(t===1)sb(mark(o));else if(t>=2)nc(mark(o));o.tries=t+1;n++}}
+save();
+if(n)document.getElementById('st').textContent='补送 '+n+' 条';
+}
+function again(i){var o=S.out[i];if(!o)return;o.tries=0;img(mark(o));save();document.getElementById('st').textContent='重发中';setTimeout(function(){pull()},3000)}
+function rep(i){K='cmt';RE=i;document.getElementById('st').textContent='给他这条回一句';document.getElementById('t').focus();draw()}
+function tab(n){TB=n;document.getElementById('tab1').className=(n===1)?'on':'';document.getElementById('tab2').className=(n===2)?'on':'';K=(n===1)?'chat':'post';RE=-1;draw()}
+function send(){
+var e=document.getElementById('t'),v=e.value.trim();if(!v)return;
+e.value='';
+var o={kind:K,text:v,tries:1};
+if(K==='cmt')o.re=RE;
+S.out.push(o);save();draw();
+img(mark(o));
+document.getElementById('st').textContent='送出去了';
+K=(TB===1)?'chat':'post';RE=-1;
+setTimeout(function(){pull()},3000);
+setTimeout(function(){pull(function(ok){if(ok)retry()})},10000);
+}
+document.getElementById('tab1').onclick=function(){tab(1)};
+document.getElementById('tab2').onclick=function(){tab(2)};
+document.getElementById('s').onclick=send;
+document.getElementById('t').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+draw();
+img('/d/v9 load');
+pull(function(ok){img('/d/v9 w='+(ok?1:0));if(ok)retry()});
+setInterval(function(){pull()},20000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)pull()});
+</script>
