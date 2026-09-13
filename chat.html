@@ -44,7 +44,7 @@ var e=document.getElementById('t');var v=e.value.trim();if(!v)return;
 e.value='';
 A.push({from:'her',text:v,time:''});draw();
 document.getElementById('st').textContent='发送中';
-fetch(W+'/say',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({from:'her',text:v})}).then(function(r){return r.text()}).then(function(x){
+fetch(W+'/say?from=her&t='+Date.now()+'&text='+encodeURIComponent(v.slice(0,1000))).then(function(r){return r.text()}).then(function(x){
 document.getElementById('st').textContent=x.slice(0,150);
 setTimeout(load,1200)
 }).catch(function(){document.getElementById('st').textContent='连不上后台'})}
