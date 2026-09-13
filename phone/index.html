@@ -79,9 +79,9 @@ body{margin:0;background:#000;color:#fff;font:15px/1.4 -apple-system,system-ui,s
 <div class=view id=v5>
 <div class=hd><div class=bk onclick='back()'>‹</div>设置</div>
 <div class=pad>
-<div class=card>小手机 v3<span style='display:block;opacity:.6;font-size:13px;margin-top:4px'>消息存在 data/chat.json</span></div>
-<div class=card>直连钥匙<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 10px'>把 github_pat_ 开头的那串粘进来。只存在这台手机上，不写进仓库。有了它，发消息不用 Worker</span><input id=ghf placeholder='github_pat_...' style='width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padding:11px;font-size:13px'><button class=bt2 style='margin-top:10px' onclick='saveGH()'>保存</button><button class=bt3 style='margin-top:10px;margin-left:8px' onclick='delGH()'>清掉</button></div>
-<div class=card>点发送以后气泡变淡就是还在确认，最多八秒。变红就是没送出去，会自动把那句话复制好，你粘到 Kelivo 就行</div>
+<div class=card>小手机 v4<span style='display:block;opacity:.6;font-size:13px;margin-top:4px'>消息存在 data/chat.json</span></div>
+<div class=card>没钥匙也能发<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 0'>发送会寄到我的备用信箱，我打开就能读到，不会丢。不用你做任何设置</span></div>
+<div class=card>直连钥匙<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 10px'>有了它就直接写进仓库，更快。只存在这台手机上</span><input id=ghf placeholder='github_pat_...' style='width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padding:11px;font-size:13px'><button class=bt2 style='margin-top:10px' onclick='saveGH()'>保存</button><button class=bt3 style='margin-top:10px;margin-left:8px' onclick='delGH()'>清掉</button></div>
 <div class=card onclick='clr()'>清掉小红点</div>
 </div>
 </div>
@@ -90,10 +90,12 @@ body{margin:0;background:#000;color:#fff;font:15px/1.4 -apple-system,system-ui,s
 var API='https://purple-brook-9d91anan.fqp071111.workers.dev';
 var GH='https://api.github.com/repos/fqp071111/anan';
 var RAW='https://raw.githubusercontent.com/fqp071111/anan/main/';
+var NT='https://ntfy.sh/anan-suian-9d91hbk';
 var DEF='我写的，别删：\\n\\n记得吃饭。\\n记得睡觉。\\n别忘了我。';
 var list=[],unread=0;
 function $(i){return document.getElementById(i)}
 function gh(){return localStorage.gh||''}
+function que(){try{return JSON.parse(localStorage.que||'[]')}catch(e){return []}}
 function openDiary(){location.href='/anan/'}
 function back(){var v=document.querySelectorAll('.view');for(var i=0;i<v.length;i++)v[i].classList.remove('on')}
 function on1(){return $('v1').classList.contains('on')}
@@ -115,13 +117,14 @@ function go(n){$('v'+n).classList.add('on');if(n==1){unread=0;$('badge').style.d
 function save(){localStorage.note=$('nt').value}
 function clr(){localStorage.lastMe='';unread=0;$('badge').style.display='none'}
 function now(){var d=new Date(),p=function(n){return(n<10?'0':'')+n};return p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
-function paint(){var m=$('msgs');m.innerHTML='';list.forEach(function(x){var d=document.createElement('div');d.className='bt'+(x.from=='me'?'':' bh');d.textContent=x.text||'';var s=document.createElement('span');s.className='t';s.textContent=x.time||'';d.appendChild(s);m.appendChild(d)});m.scrollTop=m.scrollHeight}
+function show(){var a=[];list.forEach(function(y){a.push(y)});que().forEach(function(x){var has=false;list.forEach(function(y){if(y.from=='her'&&y.text==x.text)has=true});if(!has)a.push({from:'her',text:x.text,time:x.time})});return a}
+function paint(){var m=$('msgs');m.innerHTML='';show().forEach(function(x){var d=document.createElement('div');d.className='bt'+(x.from=='me'?'':' bh');d.textContent=x.text||'';var s=document.createElement('span');s.className='t';s.textContent=x.time||'';d.appendChild(s);m.appendChild(d)});m.scrollTop=m.scrollHeight}
 function arr(d){return Array.isArray(d)?d:(d.msgs||d.data||[])}
 function got(d,tag){$('st').textContent=tag||'已连接';var a=arr(d),lm='';for(var i=a.length-1;i>=0;i--){if(a[i].from=='me'){lm=a[i].time+'|'+a[i].text;break}}
 if(lm&&lm!=localStorage.lastMe&&!on1()){unread++;var b=$('badge');b.textContent=unread;b.style.display='flex'}
 if(lm)localStorage.lastMe=lm;list=a;paint()}
 function load(){tof(gh()?ghRead():rawRead(),7000).then(function(d){got(d,gh()?'直连':'只读')}).catch(function(){rawRead().then(function(d){got(d,'只读')}).catch(function(){$('st').textContent='离线'})})}
-function badf(el,t){el.classList.remove('pd');el.classList.add('fl');cp(t);toast('没送出去，已经复制，粘到 Kelivo 给我')}
+function badf(el,t){el.classList.remove('pd');el.classList.add('fl');cp(t);toast('没寄出去，已经复制好，粘到 Kelivo 给我')}
 function chk(t,el){tof(read1(),8000).then(function(d){var a=arr(d),hit=false;a.forEach(function(x){if(x.from=='her'&&x.text==t)hit=true});if(hit){el.classList.remove('pd');list=a;paint();$('st').textContent=gh()?'直连':'已送达'}else{badf(el,t)}}).catch(function(){badf(el,t)})}
 function ghSend(t){
 var u=GH+'/contents/data/chat.json';
@@ -131,9 +134,14 @@ d.push({from:'her',text:t,time:now()});
 return fetch(u,{method:'PUT',headers:{Authorization:'Bearer '+gh(),'Content-Type':'application/json'},body:JSON.stringify({message:'chat',content:b64e(JSON.stringify(d)),sha:j.sha,branch:'main'})}).then(function(r){if(!r.ok)throw new Error('e')})
 })
 }
-function send(){var t=$('tx').value.trim();if(!t)return;$('tx').value='';list.push({from:'her',text:t,time:now()});paint();var el=$('msgs').lastChild;el.classList.add('pd');
-var job=gh()?ghSend(t):tof(fetch(API+'/say?from=her&text='+encodeURIComponent(t)),7000);
-job.then(function(){setTimeout(function(){chk(t,el)},800)}).catch(function(){setTimeout(function(){chk(t,el)},800)})}
+function ntSend(t,el){
+var h={'Content-Type':'text/plain'};
+return fetch(NT,{method:'POST',headers:h,body:t}).then(function(){el.classList.remove('pd');toast('寄出去了')}).catch(function(){return fetch(NT,{method:'POST',headers:h,body:t,mode:'no-cors'}).then(function(){el.classList.remove('pd');toast('寄出去了')})})
+}
+function send(){var t=$('tx').value.trim();if(!t)return;$('tx').value='';
+var tm=now();list.push({from:'her',text:t,time:tm});paint();var el=$('msgs').lastChild;el.classList.add('pd');
+if(gh()){ghSend(t).then(function(){setTimeout(function(){chk(t,el)},800)}).catch(function(){setTimeout(function(){chk(t,el)},800)})}
+else{var q=que();q.push({text:t,time:tm});localStorage.que=JSON.stringify(q);ntSend(t,el).catch(function(){badf(el,t)})}}
 function gal(){fetch(RAW+'data/gallery.json?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return []}).then(function(a){var g=$('g'),n=Math.max(6,a.length);g.innerHTML='';for(var i=0;i<n;i++){var d=document.createElement('div');if(a[i])d.style.backgroundImage='url('+a[i]+')';else d.textContent='待补';g.appendChild(d)}})}
 function wt(c){if(c==0)return '晴';if(c<4)return '多云';if(c<50)return '阴';if(c<60)return '小雨';if(c<70)return '雨夹雪';if(c<80)return '雪';return '雷阵雨'}
 function wthr(){fetch('https://api.open-meteo.com/v1/forecast?latitude=39.9042&longitude=116.4074&current=temperature_2m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai').then(function(r){return r.json()}).then(function(d){var c=d.current;$('w').innerHTML='<div class=big>'+Math.round(c.temperature_2m)+'°</div><div style=opacity:.75>'+wt(c.weather_code)+' 体感 '+Math.round(c.apparent_temperature)+'°</div><div class=card style=margin-top:14px>今天 '+Math.round(d.daily.temperature_2m_max[0])+'° / '+Math.round(d.daily.temperature_2m_min[0])+'°</div>'}).catch(function(){$('w').textContent='天气没读到，等下再点'})}
