@@ -1,0 +1,88 @@
+<!doctype html><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1,viewport-fit=cover'>
+<title>刘耀文</title>
+<link rel=apple-touch-icon href=./apple-touch-icon.png>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-title content=刘耀文>
+<meta name=theme-color content=#e9f2ff>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;font:16px/1.7 -apple-system,sans-serif;color:#1b2b4a;background:#e9f2ff;background-image:radial-gradient(700px 440px at 8% -10%,#cfe3ff 0%,rgba(207,227,255,0) 65%),radial-gradient(620px 420px at 98% 4%,#e2eaff 0%,rgba(226,234,255,0) 62%),linear-gradient(170deg,#f4f9ff 0%,#e3efff 55%,#d6e5ff 100%);background-attachment:fixed;display:flex;flex-direction:column}
+#h{padding:calc(env(safe-area-inset-top) + 14px) 18px 12px;text-align:center;font-size:13px;letter-spacing:5px;color:#5b7bb0;font-weight:600}
+#h i{font-style:normal;font-size:9px;letter-spacing:0;color:#a8bcd8;vertical-align:super}
+#m{flex:1;overflow-y:auto;padding:8px 14px 12px;-webkit-overflow-scrolling:touch}
+.r{margin:0 0 10px;display:flex}
+.r.me{justify-content:flex-end}
+.b{max-width:78%;padding:11px 15px;border-radius:20px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);box-shadow:0 8px 22px rgba(43,84,150,.10);white-space:pre-wrap;word-break:break-word}
+.r.me .b{background:linear-gradient(180deg,#7aa7ff,#5b8cf0);color:#fff;border:0}
+.r.no .b{background:rgba(255,255,255,.4);border-style:dashed;color:#7d8ea8}
+.t{font-size:11px;color:#8fa6c8;margin:0 0 4px}
+.t2{font-size:11px;color:#c47a7a;margin:4px 0 0}
+#i{display:flex;gap:8px;align-items:flex-end;padding:10px 14px calc(env(safe-area-inset-bottom) + 12px);background:rgba(255,255,255,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,.8)}
+#t{flex:1;min-height:42px;max-height:120px;resize:none;font:16px/1.5 -apple-system,sans-serif;color:#1b2b4a;background:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.9);border-radius:20px;padding:10px 14px;outline:none}
+#s{flex:none;font:15px/1 -apple-system,sans-serif;color:#fff;background:linear-gradient(180deg,#7aa7ff,#5b8cf0);border:0;border-radius:20px;padding:13px 18px;box-shadow:0 6px 16px rgba(70,120,220,.28)}
+#st{text-align:center;font-size:11px;color:#8fa6c8;padding:0 0 6px;min-height:16px;word-break:break-all}
+</style>
+<div id=h>刘耀文<i>v5</i></div>
+<div id=m></div>
+<div id=st></div>
+<div id=i><textarea id=t rows=1 placeholder='跟他说点什么'></textarea><button id=s>发送</button></div>
+<script>
+var W='https://purple-brook-9d91anan.fqp071111.workers.dev';
+var S={msgs:[],out:[]};
+try{var q=JSON.parse(localStorage.getItem('liu')||'{}');if(q&&q.msgs)S.msgs=q.msgs;if(q&&q.out)S.out=q.out}catch(e){}
+function save(){try{localStorage.setItem('liu',JSON.stringify(S))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function draw(){
+var m=document.getElementById('m'),h='',i;
+for(i=0;i<S.msgs.length;i++){h+='<div class="r'+(S.msgs[i].from==='me'?'':' me')+'"><div><div class=t>'+esc(S.msgs[i].time||'')+'</div><div class=b>'+esc(S.msgs[i].text||'')+'</div></div></div>'}
+for(i=0;i<S.out.length;i++){h+='<div class="r me no"><div><div class=t>还没送到</div><div class=b>'+esc(S.out[i].text)+'</div><div class=t2 onclick="resend('+i+')">点这里重发</div></div></div>'}
+if(!h)h='<div class=r><div><div class=t>等着</div><div class=b>底下打字，点发送。你写的话先住在你手机里，丢不了。</div></div></div>';
+m.innerHTML=h;m.scrollTop=m.scrollHeight;
+}
+function T(u,ms){return Promise.race([fetch(u,{cache:'no-store'}),new Promise(function(_,r){setTimeout(function(){r(new Error('slow'))},ms)})])}
+function beacon(t){var im=new Image();im.src=W+'/say?from=her&t='+Date.now()+Math.random()+'&text='+encodeURIComponent(String(t).slice(0,1000))}
+function merge(a,fresh){
+S.msgs=a;
+if(fresh){var tail=[],i;for(i=Math.max(0,a.length-10);i<a.length;i++){if(a[i].from==='her')tail.push(a[i].text)}
+S.out=S.out.filter(function(o){return tail.indexOf(o.text)<0})}
+save();draw();
+document.getElementById('st').textContent=S.out.length?('还有 '+S.out.length+' 条没送到'):'';
+}
+function pull(cb){
+T(W+'/msgs?t='+Date.now(),8000).then(function(r){return r.json()}).then(function(a){
+if(!Array.isArray(a))throw new Error('bad');
+merge(a,1);if(cb)cb(1)
+}).catch(function(){
+fetch('./data/chat.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(a){
+if(Array.isArray(a))merge(a,0);
+if(cb)cb(0)
+}).catch(function(){if(cb)cb(0)})
+})
+}
+function retry(){
+var n=0,i;
+for(i=0;i<S.out.length;i++){if((S.out[i].tries||0)<3){S.out[i].tries=(S.out[i].tries||0)+1;beacon(S.out[i].text);n++}}
+save();
+if(n)document.getElementById('st').textContent='补送 '+n+' 条';
+}
+function resend(i){
+if(!S.out[i])return;
+S.out[i].tries=0;beacon(S.out[i].text);save();
+document.getElementById('st').textContent='重发中';
+setTimeout(function(){pull()},2500);
+}
+function send(){
+var e=document.getElementById('t'),v=e.value.trim();if(!v)return;
+e.value='';
+S.out.push({text:v,tries:0});save();draw();
+beacon(v);
+document.getElementById('st').textContent='送出去了';
+setTimeout(function(){pull()},3000);
+}
+document.getElementById('s').onclick=send;
+document.getElementById('t').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+draw();
+pull(function(ok){if(ok)retry()});
+setInterval(function(){pull()},20000);
+</script>
