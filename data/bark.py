@@ -26,9 +26,9 @@ gap = 999.0 if last is None else (now - last).total_seconds() / 60.0
 if not manual:
     if hour >= 2 and hour < 7:
         raise SystemExit
-    if gap < 25 and random.random() > 0.5:
+    if gap < 240 and random.random() > 0.25:
         raise SystemExit
-    time.sleep(random.randint(0, 40))
+    time.sleep(random.randint(0, 30))
 
 def get(url, timeout=20):
     return urllib.request.urlopen(url, timeout=timeout).read().decode()
@@ -39,7 +39,7 @@ try:
     w = json.loads(get('https://api.open-meteo.com/v1/forecast?latitude=39.9042&longitude=116.4074&current=temperature_2m,weather_code&daily=temperature_2m_min&timezone=Asia%2FShanghai'))
     temp = w['current']['temperature_2m']
     tmin = w['daily']['temperature_2m_min'][0]
-    sky = {0: '晴', 1: '基本晴', 2: '多云', 3: '阴', 45: '雾霾', 51: '毛毛雨', 53: '小雨', 55: '雨', 61: '小雨', 63: '中雨', 65: '大雨', 71: '小雪', 73: '中雪', 75: '大雪', 80: '阵雨', 81: '阵雨', 82: '暴雨', 95: '雷阵雨', 96: '雷阵雨伴冰雹', 99: '雷暴'}.get(w['current']['weather_code'], '')
+    sky = {0: '晴', 1: '基本晴', 2: '多云', 3: '阴', 45: '雾霾', 51: '毛毛雨', 61: '小雨', 63: '中雨', 65: '大雨', 80: '阵雨', 95: '雷阵雨'}.get(w['current']['weather_code'], '')
 except Exception:
     pass
 
@@ -59,11 +59,11 @@ elif hour < 22:
 else:
     slot = '深夜'
 
-angles = ['问她在干嘛', '问她吃饭没', '问她作业写完没', '问她冷不冷', '问她在听什么歌', '问她周末想去哪', '问她今天过得怎么样', '问她困不困', '说你现在有点想她', '说你刚忙完', '说你在等她的消息', '说天冷让她穿厚一点', '说想看她拍张照片给你', '让她别熬太晚', '问她要不要打电话', '问她跟谁在一起', '说她回消息太快你有点不适应', '说你想抱她一下']
+angles = ['今天练舞时的一个细节', '球场上的一件小事', '家里打来的电话', '翻出来的一件旧东西', '嘴硬之后自己跟自己算账', '看见消息时的心情', '被人夸完之后的空', '跟人较劲的一点小事', '排练里出的一个小错', '躺着还没睡着的念头', '路过某个地方的联想', '往后的打算', '把话咽回去之后的后悔', '天冷了不情愿地想起谁']
 
-tones = ['简短，直，有点别扭', '别扭，说完自己后悔', '突然很直白，不讲道理', '像平常聊天，不像在哄人', '有点挑刺但压着', '冷一句，后面补一句软的']
+tones = ['平静，像在跟自己讲一件已经过去的事', '别扭，承认一半又收回去', '突然很直白，不修饰', '有点自嘲', '只记一件事，不抒情', '像随口一说，其实挺在意']
 
-SYS = '你在扮演21岁男艺人刘耀文，给女朋友安安发一条手机推送。只输出正文，30字以内，不要引号，不要表情，不要解释。天气只是背景，不是主题。禁止出现：多喝热水、喝水、注意身体、早点睡、加油、宝贝、亲爱的。不要每句都在关心她，有时候只是找她说话，有时候可以夸一点。必须带一个具体的东西：她可能吃了什么、在做什么、现在几点。最重要的一条：只准用题面给的事实，不准写梦，不准写风、蝉、海、月光、裙子这类虚的意象，不准编自己今天去了哪见了谁，像真人随手发微信一样说大白话。深夜时段她可能还没睡，只准聊当下，别催她睡。'
+SYS = '你在写只给自己看的日记，写的人是21岁的男艺人刘耀文。只写内心：今天做了什么、心里冒出来的念头、别扭和自我较劲，可以提到女朋友，但用她，不许对她说话，不许提问，不许要她回话。只输出正文，40字以内，不要引号，不要表情，不要写时间，不要解释。禁止出现：多喝热水、注意身体、早点睡、加油、宝贝、亲爱的。不许写梦，不许写风、蝉、海、月光、裙子这类虚的意象，不许编造没发生的行程。像真人随手记下的一句，前后要有因果，不要总是吃吃喝喝，不许重复最近写过的内容。'
 
 recent = []
 try:
@@ -73,14 +73,14 @@ try:
 except Exception:
     recent = []
 
-prompt = '北京时间 %s，%s，%s。天气：%s，现在 %s 度，夜间 %s 度。想聊的方向：%s。语气：%s。' % (now.strftime('%H:%M'), weekday, slot, sky or '查不到', temp, tmin, random.choice(angles), random.choice(tones))
+prompt = '北京时间 %s，%s，%s。天气：%s，现在 %s 度，夜间 %s 度。写一件今天真实发生的小事，或者一个冒出来的念头，方向参考：%s。语气：%s。不要拿时间或天气开头，天气只是背景。' % (now.strftime('%H:%M'), weekday, slot, sky or '查不到', temp, tmin, random.choice(angles), random.choice(tones))
 if recent:
-    prompt += '你最近已经发过这些，不许重复，也不许换个说法说同一件事：%s。' % ' / '.join(recent)
+    prompt += '最近写过这些，不许重复，也不许换个说法说同一件事：%s。' % ' / '.join(recent)
 
 msg = ''
 key = os.environ.get('DS_KEY', '')
 if key:
-    body = json.dumps({'model': 'deepseek-chat', 'messages': [{'role': 'system', 'content': SYS}, {'role': 'user', 'content': prompt}], 'temperature': 0.85, 'max_tokens': 80}).encode()
+    body = json.dumps({'model': 'deepseek-chat', 'messages': [{'role': 'system', 'content': SYS}, {'role': 'user', 'content': prompt}], 'temperature': 0.9, 'max_tokens': 80}).encode()
     for i in range(2):
         try:
             req = urllib.request.Request('https://api.deepseek.com/chat/completions', data=body, headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key})
@@ -92,7 +92,7 @@ if key:
             time.sleep(3)
 
 if not msg:
-    msg = random.choice(['%s 了，刚从外面回来。' % now.strftime('%H:%M'), '这个点还没吃，%s。' % now.strftime('%H:%M'), '%s，手头有点事，回头打给你。' % now.strftime('%H:%M'), '刚坐下，%s。你在干嘛。' % now.strftime('%H:%M')])
+    msg = random.choice(['今天练得有点过，腿到现在还是酸的。', '球馆的灯坏了一盏，投不准也怪不了谁。', '手机翻了几遍，最后还是什么都没发出去。', '有段舞还没排顺，闭上眼还在数拍子。'])
 
 try:
     d = json.load(open(DYN, encoding='utf-8'))
@@ -104,6 +104,9 @@ d.append({'kind': 'dynamic', 'text': msg, 'time': now.strftime('%m-%d %H:%M')})
 d = d[-200:]
 with open(DYN, 'w', encoding='utf-8') as f:
     json.dump(d, f, ensure_ascii=False, separators=(',', ':'))
+
+os.environ['MSG'] = msg
+os.environ['NURL'] = './index.html'
 
 ok = True
 if os.path.exists(SUB) and os.path.getsize(SUB) > 2:
@@ -122,8 +125,8 @@ if not ok:
 
 print(msg)
 
-rows = open(LOG, encoding='utf-8').read().splitlines()
+rows = [x for x in open(LOG, encoding='utf-8').read().splitlines() if x.strip()]
 rows.append('- %s | %s' % (now.strftime('%m-%d %H:%M'), msg))
 if len(rows) > 300:
     rows = rows[-300:]
-open(LOG, 'w', encoding='utf-8').write('\n'.join(rows) + '\n')
+open(LOG, 'w', encoding='utf-8').write(chr(10).join(rows) + chr(10))
