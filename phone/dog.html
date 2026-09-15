@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang=zh>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content='width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no'>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
+<meta name=theme-color content='#0d0f14'>
+<title>小狗</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#0d0f14;color:#fff;font:15px/1.4 -apple-system,system-ui,sans-serif;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);display:flex;flex-direction:column;min-height:100vh}
+.hd{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
+.bk{width:30px;height:30px;border-radius:15px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;text-decoration:none;flex:none}
+.pad{padding:18px;flex:1;display:flex;flex-direction:column}
+.stage{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 0 10px}
+.face{font-size:96px;line-height:1}
+.nm{font-size:17px;font-weight:600}
+.lv{font-size:12px;opacity:.5}
+.say{font-size:14px;opacity:.85;min-height:22px;margin-top:4px;text-align:center}
+.bars{margin:22px 0 6px}
+.bar{margin-bottom:14px}
+.bar .lb{display:flex;justify-content:space-between;font-size:12px;opacity:.6;margin-bottom:6px}
+.tr{height:8px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.tr i{display:block;height:100%;border-radius:4px;transition:width .3s}
+.f .tr i{background:linear-gradient(90deg,#fb923c,#f97316)}
+.m .tr i{background:linear-gradient(90deg,#60a5fa,#3b82f6)}
+.l .tr i{background:linear-gradient(90deg,#f472b6,#ec4899)}
+.keys{display:flex;gap:10px;margin-top:auto}
+.keys button{flex:1;border:0;background:#20242f;color:#fff;border-radius:16px;padding:16px 0;font-size:14px}
+.keys button:active{background:#3b82f6}
+</style>
+</head>
+<body>
+<div class=hd><a class=bk href='index.html'>‹</a>小狗<span style='margin-left:auto;font-size:12px;font-weight:400;opacity:.4' onclick='rename()'>改名字</span></div>
+<div class=pad>
+<div class=stage><div class=face id=fc>🙂</div><div class=nm id=nm>小文文</div><div class=lv id=lv></div><div class=say id=say></div></div>
+<div class=bars>
+<div class='bar f'><div class=lb><span>饱</span><span id=ft></span></div><div class=tr><i id=fi></i></div></div>
+<div class='bar m'><div class=lb><span>心情</span><span id=mt></span></div><div class=tr><i id=mi></i></div></div>
+<div class='bar l'><div class=lb><span>亲密度</span><span id=lt></span></div><div class=tr><i id=li></i></div></div>
+</div>
+<div class=keys><button onclick='act(1)'>喂</button><button onclick='act(2)'>摸头</button><button onclick='act(3)'>陪玩</button></div>
+</div>
+<script>
+var d=null;
+function sv(){localStorage.dog=JSON.stringify(d)}
+function ld(){
+try{d=JSON.parse(localStorage.dog||'')}catch(e){d=null}
+if(!d||!d.n)d={n:'小文文',f:80,m:80,l:12,t:Date.now()};
+tick();
+}
+function tick(){
+var h=(Date.now()-d.t)/3600000;
+d.f=Math.max(0,Math.round(d.f-h*5));
+d.m=Math.max(0,Math.round(d.m-h*4));
+d.t=Date.now();
+sv();paint();
+}
+function emo(){
+if(d.f<20||d.m<20)return '🥺';
+if(d.f<50)return '😔';
+if(d.m>85)return '😆';
+if(d.m>60)return '🙂';
+return '😐';
+}
+function lvn(){
+if(d.l<15)return '刚认识';
+if(d.l<35)return '有点熟';
+if(d.l<65)return '很黏你';
+if(d.l<100)return '只认你';
+return '命都给你';
+}
+function paint(){
+document.getElementById('fc').textContent=emo();
+document.getElementById('nm').textContent=d.n;
+document.getElementById('lv').textContent=lvn()+' · 亲密度 '+d.l;
+document.getElementById('ft').textContent=d.f;
+document.getElementById('mt').textContent=d.m;
+document.getElementById('lt').textContent=d.l;
+document.getElementById('fi').style.width=d.f+'%';
+document.getElementById('mi').style.width=d.m+'%';
+document.getElementById('li').style.width=Math.min(100,d.l)+'%';
+}
+function say(t){document.getElementById('say').textContent=t}
+function act(k){
+tick();
+if(k==1){d.f=Math.min(100,d.f+20);d.m=Math.min(100,d.m+3);d.l+=1;say('吃完了。还有吗。')}
+if(k==2){d.m=Math.min(100,d.m+12);d.l+=2;say('再摸一会儿。')}
+if(k==3){d.m=Math.min(100,d.m+16);d.f=Math.max(0,d.f-6);d.l+=3;say('再来一次。')}
+sv();paint();
+}
+function rename(){var n=prompt('它叫什么',d.n);if(n&&n.trim()){d.n=n.trim();sv();paint()}}
+ld();
+setInterval(tick,60000);
+</script>
+</body>
+</html>
