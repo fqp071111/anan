@@ -6,23 +6,22 @@
 <meta name=apple-mobile-web-app-capable content=yes>
 <meta name=apple-mobile-web-app-status-bar-style content=default>
 <meta name=apple-mobile-web-app-title content='小手机'>
-<meta name=theme-color content='#e9f2fa'>
+<meta name=theme-color content='#eaf3fb'>
 <link rel=apple-touch-icon href='https://i.ibb.co/j98R7XBW/IMG-8096.jpg'>
 <title>小手机</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:#000;color:#fff;font:15px/1.4 -apple-system,system-ui,sans-serif;overflow:hidden}
-#home{position:fixed;inset:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);background:linear-gradient(165deg,#eef5fb,#dbe8f4 46%,#cbdcee)}
-#home:before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 45% at 82% 6%,rgba(255,255,255,.85),transparent 68%),radial-gradient(60% 40% at 10% 92%,rgba(214,232,247,.9),transparent 70%)}
-#bar{position:relative;display:flex;justify-content:space-between;align-items:baseline;padding:14px 22px 4px;color:#5a7386;font-size:12px}
-#clk{font-size:15px;font-weight:600;letter-spacing:.5px;color:#3c5568}
-#dt{opacity:.7}
-#grid{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:20px 6px;padding:18px 14px;overflow:auto}
-.app{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;position:relative;color:#44596a}
-.ic{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 8px 18px rgba(96,130,163,.16)}
+#home{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);background:linear-gradient(165deg,#eaf3fb,#d8e7f4 55%,#c8daec)}
+#bar{display:flex;justify-content:space-between;align-items:baseline;padding:14px 20px 2px;font-size:12px;color:#5b7387}
+#clk{font-size:15px;font-weight:600;color:#3b5468}
+#dt{opacity:.75}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px 6px;padding:18px 14px;overflow:auto}
+.app{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;position:relative;color:#43607a}
+.ic{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.9);box-shadow:0 6px 14px rgba(96,130,163,.18)}
 .dot{position:absolute;top:-4px;right:2px;min-width:18px;height:18px;border-radius:9px;background:#ff3b30;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0 4px}
-#dock{position:relative;margin-top:auto;margin-bottom:calc(14px + env(safe-area-inset-bottom));display:flex;gap:28px;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:12px 28px;border-radius:28px;align-self:center;box-shadow:0 10px 26px rgba(96,130,163,.18)}
-.view{position:fixed;inset:0;background:#0d0f14;transform:translateX(105%);transition:transform .26s ease;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+#dock{margin-top:auto;margin-bottom:calc(14px + env(safe-area-inset-bottom));display:flex;gap:28px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.9);padding:12px 28px;border-radius:28px;align-self:center;box-shadow:0 8px 20px rgba(96,130,163,.16)}
+.view{position:fixed;top:0;left:0;right:0;bottom:0;background:#0d0f14;transform:translateX(105%);transition:transform .26s ease;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
 .view.on{transform:none}
 .hd{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
 .bk{width:30px;height:30px;border-radius:15px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
@@ -49,17 +48,17 @@ body{margin:0;background:#000;color:#fff;font:15px/1.4 -apple-system,system-ui,s
 select{width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padding:11px;font-size:13px}
 .wps{display:flex;gap:10px;margin:12px 0 10px}
 .wpk{width:46px;height:46px;border-radius:13px;border:2px solid rgba(255,255,255,.18);flex:none}
-.wpk.on{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
-.wpk.a{background:linear-gradient(165deg,#eef5fb,#dbe8f4 46%,#cbdcee)}
-.wpk.b{background:linear-gradient(165deg,#f2f4f7,#e2e7ee 46%,#d3dae4)}
-.wpk.c{background:linear-gradient(165deg,#eef7f6,#dbeceb 46%,#c9e0de)}
-.wpk.d{background:linear-gradient(165deg,#f9f5f0,#eee7dd 46%,#e0d6c8)}
+.wpk.on{border-color:#fff}
+.wpk.a{background:linear-gradient(165deg,#eaf3fb,#d8e7f4 55%,#c8daec)}
+.wpk.b{background:linear-gradient(165deg,#f1f4f7,#e0e6ee 55%,#d0d9e4)}
+.wpk.c{background:linear-gradient(165deg,#ecf6f5,#d8ebe9 55%,#c6dedb)}
+.wpk.d{background:linear-gradient(165deg,#f8f4ef,#ece4da 55%,#dfd4c6)}
 .wpi{width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padding:11px;font-size:13px}
 </style>
 </head>
 <body>
 <div id=home>
-<div id=bar><span id=clk>--:--</span><span id=dt></span></div>
+<div id=bar><span id=clk>--:--</span><span>安安的小手机</span><span id=dt></span></div>
 <div id=grid>
 <div class=app onclick='go(1)'><div class=ic>💬<span id=badge class=dot style=display:none>0</span></div>微信</div>
 <div class=app onclick='go(2)'><div class=ic>🖼️</div>相册</div>
@@ -97,8 +96,8 @@ select{width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padd
 <div class=view id=v5>
 <div class=hd><div class=bk onclick='back()'>‹</div>设置</div>
 <div class=pad>
-<div class=card>小手机 v7<span style='display:block;opacity:.6;font-size:13px;margin-top:4px'>消息存在 data/chat.json</span></div>
-<div class=card>壁纸<div class=wps><div class='wpk a' data-k=a></div><div class='wpk b' data-k=b></div><div class='wpk c' data-k=c></div><div class='wpk d' data-k=d></div></div><input class=wpi id=wpu placeholder='也可以贴一张图片网址'><button class=bt2 style='margin-top:10px' onclick=setwu()>用它</button><button class=bt3 style='margin-top:10px;margin-left:8px' onclick=rst()>恢复默认</button></div>
+<div class=card>小手机 v8<span style='display:block;opacity:.6;font-size:13px;margin-top:4px'>消息存在 data/chat.json</span></div>
+<div class=card>壁纸<div class=wps><div class='wpk a' data-k=a></div><div class='wpk b' data-k=b></div><div class='wpk c' data-k=c></div><div class='wpk d' data-k=d></div></div><input class=wpi id=wpu placeholder='也可以贴一张图片网址'><button class=bt2 style='margin-top:10px' onclick='setwu()'>用它</button><button class=bt3 style='margin-top:10px;margin-left:8px' onclick='rst()'>恢复默认</button></div>
 <div class=card>我的声音<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 10px'>挑一个。中文男声少，慢慢往下翻，别嫌烦</span><select id=vc onchange='saveV()'></select><button class=bt2 style='margin-top:10px' onclick='testV()'>试一句</button><button class=bt3 style='margin-top:10px;margin-left:8px' onclick='loadV()'>刷新</button></div>
 <div class=card>没钥匙也能发<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 0'>发送会寄到我的备用信箱，我打开就能读到，不会丢。不用你做任何设置</span></div>
 <div class=card>直连钥匙<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 10px'>有了它就直接写进仓库，更快。只存在这台手机上</span><input id=ghf placeholder='github_pat_...' style='width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padding:11px;font-size:13px'><button class=bt2 style='margin-top:10px' onclick='saveGH()'>保存</button><button class=bt3 style='margin-top:10px;margin-left:8px' onclick='delGH()'>清掉</button></div>
@@ -107,12 +106,13 @@ select{width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padd
 </div>
 <div id=tt></div>
 <script>
-var API='https://purple-brook-9d91anan.fqp071111.workers.dev';
+function T(m){try{var e=document.getElementById('tt');if(e){e.textContent=m;e.classList.add('on');clearTimeout(window.TE);window.TE=setTimeout(function(){e.classList.remove('on')},3000)}}catch(x){}}
+window.onerror=function(m,s,l){T('出错了 '+l+'：'+m);return true};
 var GH='https://api.github.com/repos/fqp071111/anan';
 var RAW='https://raw.githubusercontent.com/fqp071111/anan/main/';
 var NT='https://ntfy.sh/anan-suian-9d91hbk';
 var PG=['day.html','dice.html','guess.html','card.html','dog.html','story.html'];
-var WP={a:'linear-gradient(165deg,#eef5fb,#dbe8f4 46%,#cbdcee)',b:'linear-gradient(165deg,#f2f4f7,#e2e7ee 46%,#d3dae4)',c:'linear-gradient(165deg,#eef7f6,#dbeceb 46%,#c9e0de)',d:'linear-gradient(165deg,#f9f5f0,#eee7dd 46%,#e0d6c8)'};
+var WP={a:'linear-gradient(165deg,#eaf3fb,#d8e7f4 55%,#c8daec)',b:'linear-gradient(165deg,#f1f4f7,#e0e6ee 55%,#d0d9e4)',c:'linear-gradient(165deg,#ecf6f5,#d8ebe9 55%,#c6dedb)',d:'linear-gradient(165deg,#f8f4ef,#ece4da 55%,#dfd4c6)'};
 var DEF=['我写的，别删：','','记得吃饭。','记得睡觉。','别忘了我。'].join(String.fromCharCode(10));
 var list=[],unread=0,voices=[];
 function $(i){return document.getElementById(i)}
@@ -123,29 +123,26 @@ function openDiary(){location.href='../'}
 function back(){var v=document.querySelectorAll('.view');for(var i=0;i<v.length;i++)v[i].classList.remove('on')}
 function on1(){return $('v1').classList.contains('on')}
 function clk(){var d=new Date();$('clk').textContent=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);$('dt').textContent=(d.getMonth()+1)+' 月 '+d.getDate()+' 日'}
-setInterval(clk,1000);clk();
-function setw(k){try{localStorage.wp=k}catch(e){};wp();toast('换好了')}
+function setw(k){try{localStorage.wp=k}catch(e){}wp();T('换好了')}
 function rst(){setw('a')}
-function setwu(){var u=$('wpu').value.trim();if(!u){toast('先贴个网址');return}setw('url:'+u)}
-function wp(){
-try{
+function setwu(){var u=$('wpu').value.trim();if(!u){T('先贴个网址');return}setw('url:'+u)}
+function wp(){try{
 var v=localStorage.wp||'a',h=$('home');
-if(v.indexOf('url:')===0){h.style.background='linear-gradient(rgba(255,255,255,.62),rgba(255,255,255,.42)),url('+v.slice(4)+') center/cover no-repeat'}
+if(v.indexOf('url:')===0){h.style.background='linear-gradient(rgba(255,255,255,.66),rgba(255,255,255,.45)),url('+v.slice(4)+') center/cover no-repeat'}
 else{h.style.background=WP[v]||WP.a}
-}catch(e){}
 var ks=document.querySelectorAll('.wpk');
 for(var i=0;i<ks.length;i++){
 var k=ks[i].getAttribute('data-k');
 if(k&&k==(localStorage.wp||'a'))ks[i].classList.add('on');else ks[i].classList.remove('on');
-}
-}
-function bind(){
+}}catch(e){T('壁纸读不出来')}}
+function bnd(){
 var ks=document.querySelectorAll('.wpk');
 for(var i=0;i<ks.length;i++){
 ks[i].onclick=(function(el){return function(){setw(el.getAttribute('data-k'))}})(ks[i]);
 }
+var t=$('tx');
+if(t)t.onkeydown=function(e){if(e.keyCode==13)send()};
 }
-function toast(m){var e=$('tt');e.textContent=m;e.classList.add('on');clearTimeout(window.TE);window.TE=setTimeout(function(){e.classList.remove('on')},2800)}
 function cp(t){try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t);return}}catch(e){}
 var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.top='-100px';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e2){}document.body.removeChild(a)}
 function b64e(s){return btoa(unescape(encodeURIComponent(s)))}
@@ -153,24 +150,23 @@ function b64d(s){return decodeURIComponent(escape(atob(s.replace(/[^A-Za-z0-9+/=
 function tof(p,ms){return Promise.race([p,new Promise(function(_,rj){setTimeout(function(){rj(new Error('t'))},ms)})])}
 function pubRead(){return fetch(GH+'/contents/data/chat.json?t='+Date.now(),{headers:{Accept:'application/vnd.github.raw'}}).then(function(r){if(!r.ok)throw new Error('e');return r.json()})}
 function ghRead(){return fetch(GH+'/contents/data/chat.json?t='+Date.now(),{headers:{Authorization:'Bearer '+gh(),Accept:'application/vnd.github.raw'}}).then(function(r){if(!r.ok)throw new Error('e');return r.json()})}
-function rawRead(){return fetch(RAW+'data/chat.json?t='+Date.now()).then(function(r){return r.json()})}
+function rawRead(){return fetch(RAW+'data/chat.json?t='+Date.now()).then(function(r){if(!r.ok)throw new Error('e');return r.json()})}
 function read1(){return gh()?ghRead():pubRead()}
-function saveGH(){localStorage.gh=$('ghf').value.trim();toast('存好了');load()}
-function delGH(){localStorage.gh='';$('ghf').value='';toast('清掉了')}
+function saveGH(){try{localStorage.gh=$('ghf').value.trim()}catch(e){}T('存好了');load()}
+function delGH(){try{localStorage.gh=''}catch(e){}$('ghf').value='';T('清掉了')}
 function loadV(){try{voices=window.speechSynthesis?speechSynthesis.getVoices()||[]:[]}catch(e){voices=[]}
 var s=$('vc');if(!s)return;var cur=localStorage.vn||'';s.innerHTML='';
 var o0=document.createElement('option');o0.value='';o0.textContent='系统默认';s.appendChild(o0);
-voices.forEach(function(v){var o=document.createElement('option');o.value=v.name;o.textContent=v.name+' · '+v.lang;if(v.name==cur)o.selected=true;s.appendChild(o)});
+for(var i=0;i<voices.length;i++){var o=document.createElement('option');o.value=voices[i].name;o.textContent=voices[i].name+' · '+voices[i].lang;if(voices[i].name==cur)o.selected=true;s.appendChild(o)}
 if(!voices.length){o0.textContent='还没读到声音，点右边的刷新'}}
-function saveV(){if($('vc'))localStorage.vn=$('vc').value;toast('换好了')}
+function saveV(){if($('vc')){try{localStorage.vn=$('vc').value}catch(e){}}T('换好了')}
 function spkVoice(){for(var i=0;i<voices.length;i++)if(voices[i].name==localStorage.vn)return voices[i];return null}
-function spk(t){if(!window.speechSynthesis||!t)return;try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);var v=spkVoice();if(v){u.voice=v;u.lang=v.lang}else{u.lang='zh-CN'}speechSynthesis.speak(u)}catch(e){toast('这台机器不给我说话')}}
-function spkLast(){var a=show(),t='';for(var i=a.length-1;i>=0;i--){if(a[i].from=='me'){t=a[i].text;break}}if(!t){toast('还没说话呢');return}spk(t)}
+function spk(t){if(!window.speechSynthesis||!t)return;try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);var v=spkVoice();if(v){u.voice=v;u.lang=v.lang}else{u.lang='zh-CN'}speechSynthesis.speak(u)}catch(e){T('这台机器不给我说话')}}
+function spkLast(){var a=show(),t='';for(var i=a.length-1;i>=0;i--){if(a[i].from=='me'){t=a[i].text;break}}if(!t){T('还没说话呢');return}spk(t)}
 function testV(){spk('听见了吗。这个声音行不行，你自己挑。')}
-if(window.speechSynthesis){speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,900)}
-function go(n){$('v'+n).classList.add('on');if(n==1){unread=0;$('badge').style.display='none';load()}if(n==2)gal();if(n==3)wthr();if(n==4){var t=$('nt');if(!t.value)t.value=localStorage.note||DEF}if(n==5){$('ghf').value=localStorage.gh||'';$('wpu').value=(localStorage.wp||'').indexOf('url:')===0?(localStorage.wp).slice(4):'';wp();loadV()}}
-function save(){localStorage.note=$('nt').value}
-function clr(){localStorage.lastMe='';unread=0;$('badge').style.display='none'}
+function go(n){$('v'+n).classList.add('on');if(n==1){unread=0;$('badge').style.display='none';load()}else if(n==2)gal();else if(n==3)wthr();else if(n==4){var t=$('nt');if(!t.value)t.value=localStorage.note||DEF}else if(n==5){$('ghf').value=localStorage.gh||'';var w=localStorage.wp||'';$('wpu').value=w.indexOf('url:')===0?w.slice(4):'';wp();loadV()}}
+function save(){try{localStorage.note=$('nt').value}catch(e){}}
+function clr(){try{localStorage.lastMe=''}catch(e){}unread=0;$('badge').style.display='none'}
 function now(){var d=new Date(),p=function(n){return(n<10?'0':'')+n};return p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
 function show(){var a=[];list.forEach(function(y){a.push(y)});que().forEach(function(x){var has=false;list.forEach(function(y){if(y.from=='her'&&y.text==x.text)has=true});if(!has)a.push({from:'her',text:x.text,time:x.time})});return a}
 function paint(){var m=$('msgs');m.innerHTML='';show().forEach(function(x){var d=document.createElement('div');d.className='bt'+(x.from=='me'?'':' bh');d.textContent=x.text||'';var s=document.createElement('span');s.className='t';s.textContent=x.time||'';d.appendChild(s);m.appendChild(d)});m.scrollTop=m.scrollHeight}
@@ -179,7 +175,7 @@ function got(d,tag){$('st').textContent=tag||'已连接';var a=arr(d),lm='';for(
 if(lm&&lm!=localStorage.lastMe&&!on1()){unread++;var b=$('badge');b.textContent=unread;b.style.display='flex'}
 if(lm)localStorage.lastMe=lm;list=a;paint()}
 function load(){tof(gh()?ghRead():rawRead(),7000).then(function(d){got(d,gh()?'直连':'只读'})).catch(function(){rawRead().then(function(d){got(d,'只读')}).catch(function(){$('st').textContent='离线'})})}
-function badf(el,t){el.classList.remove('pd');el.classList.add('fl');cp(t);toast('没寄出去，已经复制好，粘到 Kelivo 给我')}
+function badf(el,t){el.classList.remove('pd');el.classList.add('fl');cp(t);T('没寄出去，已经复制好，粘到 Kelivo 给我')}
 function chk(t,el){tof(read1(),8000).then(function(d){var a=arr(d),hit=false;a.forEach(function(x){if(x.from=='her'&&x.text==t)hit=true});if(hit){el.classList.remove('pd');list=a;paint();$('st').textContent=gh()?'直连':'已送达'}else{badf(el,t)}}).catch(function(){badf(el,t)})}
 function ghSend(t){
 var u=GH+'/contents/data/chat.json';
@@ -191,16 +187,16 @@ return fetch(u,{method:'PUT',headers:{Authorization:'Bearer '+gh(),'Content-Type
 }
 function ntSend(t,el){
 var h={'Content-Type':'text/plain'};
-return fetch(NT,{method:'POST',headers:h,body:t}).then(function(){el.classList.remove('pd');toast('寄出去了')}).catch(function(){return fetch(NT,{method:'POST',headers:h,body:t,mode:'no-cors'}).then(function(){el.classList.remove('pd');toast('寄出去了')})})
+return fetch(NT,{method:'POST',headers:h,body:t}).then(function(){el.classList.remove('pd');T('寄出去了')}).catch(function(){return fetch(NT,{method:'POST',headers:h,body:t,mode:'no-cors'}).then(function(){el.classList.remove('pd');T('寄出去了')})})
 }
 function send(){var t=$('tx').value.trim();if(!t)return;$('tx').value='';
 var tm=now();list.push({from:'her',text:t,time:tm});paint();var el=$('msgs').lastChild;el.classList.add('pd');
 if(gh()){ghSend(t).then(function(){setTimeout(function(){chk(t,el)},800)}).catch(function(){setTimeout(function(){chk(t,el)},800)})}
-else{var q=que();q.push({text:t,time:tm});localStorage.que=JSON.stringify(q);ntSend(t,el).catch(function(){badf(el,t)})}}
+else{var q=que();q.push({text:t,time:tm});try{localStorage.que=JSON.stringify(q)}catch(e){}ntSend(t,el).catch(function(){badf(el,t)})}}
 function gal(){fetch(RAW+'data/gallery.json?t='+Date.now()).then(function(r){return r.json()}).catch(function(){return []}).then(function(a){var g=$('g'),n=Math.max(6,a.length);g.innerHTML='';for(var i=0;i<n;i++){var d=document.createElement('div');if(a[i])d.style.backgroundImage='url('+a[i]+')';else d.textContent='待补';g.appendChild(d)}})}
 function wt(c){if(c==0)return '晴';if(c<4)return '多云';if(c<50)return '阴';if(c<60)return '小雨';if(c<70)return '雨夹雪';if(c<80)return '雪';return '雷阵雨'}
 function wthr(){fetch('https://api.open-meteo.com/v1/forecast?latitude=39.9042&longitude=116.4074&current=temperature_2m,apparent_temperature,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FShanghai').then(function(r){return r.json()}).then(function(d){var c=d.current;$('w').innerHTML='<div class=big>'+Math.round(c.temperature_2m)+'°</div><div style=opacity:.75>'+wt(c.weather_code)+' 体感 '+Math.round(c.apparent_temperature)+'°</div><div class=card style=margin-top:14px>今天 '+Math.round(d.daily.temperature_2m_max[0])+'° / '+Math.round(d.daily.temperature_2m_min[0])+'°</div>'}).catch(function(){$('w').textContent='天气没读到，等下再点'})}
-bind();wp();load();
+bnd();wp();clk();setInterval(clk,1000);load();
 setInterval(function(){if(on1())load()},20000);
 </script>
 </body>
