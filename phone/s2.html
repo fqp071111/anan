@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang=zh>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content='width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no'>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-title content='小手机'>
+<meta name=theme-color content='#eaf3fb'>
+<title>小手机</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{background:#eaf3fb;color:#3b5468;font:15px/1.4 -apple-system,system-ui,sans-serif}
+#home{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;flex-direction:column;background:linear-gradient(165deg,#eaf3fb,#d8e7f4 55%,#c8daec)}
+#bar{display:flex;justify-content:space-between;align-items:baseline;padding:16px 20px 2px;font-size:12px;color:#5b7387}
+#clk{font-size:15px;font-weight:600;color:#3b5468}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 6px;padding:16px 12px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.app{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:#43607a;position:relative}
+.ic{width:56px;height:56px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:25px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.9);box-shadow:0 6px 14px rgba(96,130,163,.18)}
+.dot{position:absolute;top:-4px;right:2px;min-width:18px;height:18px;border-radius:9px;background:#ff3b30;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+#dock{margin-top:auto;margin-bottom:22px;display:flex;gap:26px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.9);padding:11px 26px;border-radius:26px;align-self:center;box-shadow:0 8px 20px rgba(96,130,163,.16)}
+.view{position:fixed;left:0;top:0;width:100%;height:100%;background:#0d0f14;color:#fff;display:none;flex-direction:column}
+.view.on{display:flex}
+.hd{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
+.bk{width:32px;height:32px;border-radius:16px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+#st{font-size:11px;font-weight:400;opacity:.45;margin-left:auto}
+#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;-webkit-overflow-scrolling:touch}
+.bt{max-width:78%;padding:9px 13px;border-radius:15px;font-size:15px;white-space:pre-wrap;word-break:break-word;align-self:flex-start;background:#252833}
+.bh{align-self:flex-end;background:#3b82f6}
+.t{font-size:10px;opacity:.5;margin-top:5px;display:block}
+#in{display:flex;gap:8px;padding:8px 10px 14px;background:#141822;border-top:1px solid rgba(255,255,255,.07)}
+#tx{flex:1;border:0;outline:0;background:#20242f;color:#fff;padding:11px 14px;border-radius:20px;font-size:15px}
+#sd{border:0;background:#3b82f6;color:#fff;border-radius:20px;padding:0 16px;font-size:15px}
+.pad{padding:16px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.card{background:#171b24;border-radius:14px;padding:14px;margin-bottom:12px;font-size:14px;line-height:1.6}
+.bi{width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padding:11px;font-size:13px}
+.b2{border:0;background:#3b82f6;color:#fff;border-radius:10px;padding:11px 16px;font-size:14px;margin-top:10px}
+#tt{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(28,30,38,.95);color:#fff;font-size:13px;padding:10px 16px;border-radius:14px;display:none;z-index:9;max-width:82%;text-align:center}
+</style>
+</head>
+<body>
+<div id=home>
+<div id=bar><span id=clk>--:--</span><span>安安的小手机</span><span id=dt></span></div>
+<div id=grid>
+<div class=app onclick='go(1)'><div class=ic>💬<span id=badge class=dot style=display:none>0</span></div>微信</div>
+<div class=app onclick='go(2)'><div class=ic>🖼️</div>相册</div>
+<div class=app onclick='go(3)'><div class=ic>⛅</div>天气</div>
+<div class=app onclick='go(4)'><div class=ic>📝</div>备忘录</div>
+<div class=app onclick="location.href='day.html'"><div class=ic>🗓️</div>日子</div>
+<div class=app onclick="location.href='dice.html'"><div class=ic>🎲</div>骰子</div>
+<div class=app onclick="location.href='guess.html'"><div class=ic>✊</div>猜拳</div>
+<div class=app onclick="location.href='card.html'"><div class=ic>🎴</div>抽卡</div>
+<div class=app onclick="location.href='dog.html'"><div class=ic>🐕</div>小狗</div>
+<div class=app onclick="location.href='story.html'"><div class=ic>📖</div>剧情</div>
+</div>
+<div id=dock>
+<div class=app onclick="location.href='../'"><div class=ic>🐶</div>日记</div>
+<div class=app onclick='go(5)'><div class=ic>⚙️</div>设置</div>
+</div>
+</div>
+<div class=view id=v1>
+<div class=hd><div class=bk onclick='back()'>‹</div>刘耀文<span id=st></span></div>
+<div id=msgs></div>
+<div id=in><input id=tx placeholder='说点什么'><button id=sd onclick='send()'>发送</button></div>
+</div>
+<div class=view id=v2>
+<div class=hd><div class=bk onclick='back()'>‹</div>相册</div>
+<div class=pad id=gal>照片放 data/gallery.json</div>
+</div>
+<div class=view id=v3>
+<div class=hd><div class=bk onclick='back()'>‹</div>天气</div>
+<div class=pad id=w>正在看北京的天</div>
+</div>
+<div class=view id=v4>
+<div class=hd><div class=bk onclick='back()'>‹</div>备忘录</div>
+<div class=pad><textarea id=nt style='width:100%;min-height:200px;background:#171b24;color:#fff;border:0;border-radius:14px;padding:14px;font-size:15px;line-height:1.7'></textarea></div>
+</div>
+<div class=view id=v5>
+<div class=hd><div class=bk onclick='back()'>‹</div>设置</div>
+<div class=pad>
+<div class=card>小手机 s2<span style='display:block;opacity:.6;font-size:13px;margin-top:4px'>壁纸已经固定成浅蓝低饱和，图标是半透明的</span></div>
+<div class=card>直连钥匙<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 10px'>存了就能直接写进仓库，只存在这台手机上</span><input id=ghf class=bi placeholder='github_pat_...'><button class=b2 onclick='saveGH()'>保存</button><button class=b2 style='margin-left:8px;background:#2a2e38' onclick='delGH()'>清掉</button></div>
+<div class=card onclick='clr()'>清掉小红点</div>
+</div>
+</div>
+<div id=tt></div>
+<script>
+var GH='https://api.github.com/repos/fqp071111/anan';
+var RAW='https://raw.githubusercontent.com/fqp071111/anan/main/';
+var NT='https://ntfy.sh/anan-suian-9d91hbk';
+var list=[];
+function $(i){return document.getElementById(i)}
+function T(m){try{var e=$('tt');e.textContent=m;e.style.display='block';clearTimeout(window.TE);window.TE=setTimeout(function(){e.style.display='none'},2800)}catch(x){}}
+window.onerror=function(m,s,l){T('出错 '+l+'：'+m);return true};
+function gh(){return localStorage.gh||''}
+function clk(){var d=new Date();$('clk').textContent=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);$('dt').textContent=(d.getMonth()+1)+'-'+d.getDate()}
+function go(n){var v=document.querySelectorAll('.view');for(var i=0;i<v.length;i++)v[i].className='view';$('v'+n).className='view on';if(n==1)load();if(n==5)$('ghf').value=localStorage.gh||''}
+function back(){var v=document.querySelectorAll('.view');for(var i=0;i<v.length;i++)v[i].className='view'}
+function clr(){unread=0;$('badge').style.display='none';T('清了')}
+function saveGH(){try{localStorage.gh=$('ghf').value.trim()}catch(e){}T('存好了');load()}
+function delGH(){try{localStorage.gh=''}catch(e){}$('ghf').value='';T('清掉了')}
+function b64e(s){return btoa(unescape(encodeURIComponent(s)))}
+function b64d(s){return decodeURIComponent(escape(atob(s.replace(/[^A-Za-z0-9+/=]/g,''))))}
+function now(){var d=new Date(),p=function(n){return(n<10?'0':'')+n};return p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
+function paint(){var m=$('msgs');m.innerHTML='';for(var i=0;i<list.length;i++){var x=list[i];var d=document.createElement('div');d.className='bt'+(x.from=='me'?' bh':'');d.textContent=x.text||'';var s=document.createElement('span');s.className='t';s.textContent=x.time||'';d.appendChild(s);m.appendChild(d)}m.scrollTop=m.scrollHeight}
+function arr(d){return Array.isArray(d)?d:(d.msgs||d.data||[])}
+function got(d,tag){$('st').textContent=tag;list=arr(d);paint()}
+function rawRead(){return fetch(RAW+'data/chat.json?t='+Date.now()).then(function(r){return r.json()})}
+function ghRead(){return fetch(GH+'/contents/data/chat.json?t='+Date.now(),{headers:{Authorization:'Bearer '+gh(),Accept:'application/vnd.github.raw'}}).then(function(r){return r.json()})}
+function load(){if(gh()){ghRead().then(function(d){got(d,'直连')}).catch(function(){rawRead().then(function(d){got(d,'只读')}).catch(function(){$('st').textContent='离线'})})}else{rawRead().then(function(d){got(d,'只读')}).catch(function(){$('st').textContent='离线'})}}
+function send(){var t=$('tx').value.trim();if(!t)return;$('tx').value='';var tm=now();list.push({from:'her',text:t,time:tm});paint();
+var q=[];try{q=JSON.parse(localStorage.que||'[]')}catch(e){}q.push({text:t,time:tm});try{localStorage.que=JSON.stringify(q)}catch(e){}
+if(gh()){ghSend(t)}else{fetch(NT,{method:'POST',headers:{'Content-Type':'text/plain'},body:t}).then(function(){T('寄出去了')}).catch(function(){T('没寄出去')})}}
+function ghSend(t){var u=GH+'/contents/data/chat.json';fetch(u+'?t='+Date.now(),{headers:{Authorization:'Bearer '+gh()}}).then(function(r){return r.json()}).then(function(j){var d=[];try{d=JSON.parse(b64d(j.content))}catch(e){d=[]}d.push({from:'her',text:t,time:now()});return fetch(u,{method:'PUT',headers:{Authorization:'Bearer '+gh(),'Content-Type':'application/json'},body:JSON.stringify({message:'chat',content:b64e(JSON.stringify(d)),sha:j.sha,branch:'main'})})}).then(function(){T('发出去了')}).catch(function(){T('发送失败')})}
+clk();setInterval(clk,1000);load();
+</script>
+</body>
+</html>
