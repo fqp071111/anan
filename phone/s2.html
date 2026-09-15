@@ -78,41 +78,12 @@ body{background:#eaf3fb;color:#3b5468;font:15px/1.4 -apple-system,system-ui,sans
 <div class=view id=v5>
 <div class=hd><div class=bk onclick='back()'>‹</div>设置</div>
 <div class=pad>
-<div class=card>小手机 s2<span style='display:block;opacity:.6;font-size:13px;margin-top:4px'>壁纸已经固定成浅蓝低饱和，图标是半透明的</span></div>
+<div class=card>小手机 s2<span style='display:block;opacity:.6;font-size:13px;margin-top:4px'>壁纸固定成浅蓝低饱和，图标是半透明的</span></div>
 <div class=card>直连钥匙<span style='display:block;opacity:.6;font-size:13px;margin:6px 0 10px'>存了就能直接写进仓库，只存在这台手机上</span><input id=ghf class=bi placeholder='github_pat_...'><button class=b2 onclick='saveGH()'>保存</button><button class=b2 style='margin-left:8px;background:#2a2e38' onclick='delGH()'>清掉</button></div>
 <div class=card onclick='clr()'>清掉小红点</div>
 </div>
 </div>
 <div id=tt></div>
-<script>
-var GH='https://api.github.com/repos/fqp071111/anan';
-var RAW='https://raw.githubusercontent.com/fqp071111/anan/main/';
-var NT='https://ntfy.sh/anan-suian-9d91hbk';
-var list=[];
-function $(i){return document.getElementById(i)}
-function T(m){try{var e=$('tt');e.textContent=m;e.style.display='block';clearTimeout(window.TE);window.TE=setTimeout(function(){e.style.display='none'},2800)}catch(x){}}
-window.onerror=function(m,s,l){T('出错 '+l+'：'+m);return true};
-function gh(){return localStorage.gh||''}
-function clk(){var d=new Date();$('clk').textContent=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);$('dt').textContent=(d.getMonth()+1)+'-'+d.getDate()}
-function go(n){var v=document.querySelectorAll('.view');for(var i=0;i<v.length;i++)v[i].className='view';$('v'+n).className='view on';if(n==1)load();if(n==5)$('ghf').value=localStorage.gh||''}
-function back(){var v=document.querySelectorAll('.view');for(var i=0;i<v.length;i++)v[i].className='view'}
-function clr(){unread=0;$('badge').style.display='none';T('清了')}
-function saveGH(){try{localStorage.gh=$('ghf').value.trim()}catch(e){}T('存好了');load()}
-function delGH(){try{localStorage.gh=''}catch(e){}$('ghf').value='';T('清掉了')}
-function b64e(s){return btoa(unescape(encodeURIComponent(s)))}
-function b64d(s){return decodeURIComponent(escape(atob(s.replace(/[^A-Za-z0-9+/=]/g,''))))}
-function now(){var d=new Date(),p=function(n){return(n<10?'0':'')+n};return p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())}
-function paint(){var m=$('msgs');m.innerHTML='';for(var i=0;i<list.length;i++){var x=list[i];var d=document.createElement('div');d.className='bt'+(x.from=='me'?' bh':'');d.textContent=x.text||'';var s=document.createElement('span');s.className='t';s.textContent=x.time||'';d.appendChild(s);m.appendChild(d)}m.scrollTop=m.scrollHeight}
-function arr(d){return Array.isArray(d)?d:(d.msgs||d.data||[])}
-function got(d,tag){$('st').textContent=tag;list=arr(d);paint()}
-function rawRead(){return fetch(RAW+'data/chat.json?t='+Date.now()).then(function(r){return r.json()})}
-function ghRead(){return fetch(GH+'/contents/data/chat.json?t='+Date.now(),{headers:{Authorization:'Bearer '+gh(),Accept:'application/vnd.github.raw'}}).then(function(r){return r.json()})}
-function load(){if(gh()){ghRead().then(function(d){got(d,'直连')}).catch(function(){rawRead().then(function(d){got(d,'只读')}).catch(function(){$('st').textContent='离线'})})}else{rawRead().then(function(d){got(d,'只读')}).catch(function(){$('st').textContent='离线'})}}
-function send(){var t=$('tx').value.trim();if(!t)return;$('tx').value='';var tm=now();list.push({from:'her',text:t,time:tm});paint();
-var q=[];try{q=JSON.parse(localStorage.que||'[]')}catch(e){}q.push({text:t,time:tm});try{localStorage.que=JSON.stringify(q)}catch(e){}
-if(gh()){ghSend(t)}else{fetch(NT,{method:'POST',headers:{'Content-Type':'text/plain'},body:t}).then(function(){T('寄出去了')}).catch(function(){T('没寄出去')})}}
-function ghSend(t){var u=GH+'/contents/data/chat.json';fetch(u+'?t='+Date.now(),{headers:{Authorization:'Bearer '+gh()}}).then(function(r){return r.json()}).then(function(j){var d=[];try{d=JSON.parse(b64d(j.content))}catch(e){d=[]}d.push({from:'her',text:t,time:now()});return fetch(u,{method:'PUT',headers:{Authorization:'Bearer '+gh(),'Content-Type':'application/json'},body:JSON.stringify({message:'chat',content:b64e(JSON.stringify(d)),sha:j.sha,branch:'main'})})}).then(function(){T('发出去了')}).catch(function(){T('发送失败')})}
-clk();setInterval(clk,1000);load();
-</script>
+<script src='s2.js?v=2'></script>
 </body>
 </html>
