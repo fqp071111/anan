@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang=zh>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content='width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no'>
+<meta name=apple-mobile-web-app-capable content=yes>
+<meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
+<meta name=theme-color content='#0d0f14'>
+<meta name=apple-mobile-web-app-title content='骰子'>
+<link rel=apple-touch-icon href='https://i.ibb.co/j98R7XBW/IMG-8096.jpg'>
+<title>骰子</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#0d0f14;color:#fff;font:15px/1.4 -apple-system,system-ui,sans-serif;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);display:flex;flex-direction:column;height:100vh}
+.hd{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600}
+.bk{width:30px;height:30px;border-radius:15px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;text-decoration:none;flex:none}
+.wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:20px}
+.face{font-size:150px;line-height:1;transition:transform .12s}
+.face.g{transform:scale(1.12)}
+.tip{font-size:17px;opacity:.85;text-align:center;min-height:26px;margin-top:10px}
+.sm{font-size:12px;opacity:.4;margin-top:2px}
+button{border:0;background:#3b82f6;color:#fff;border-radius:16px;padding:15px 60px;font-size:17px;margin-top:34px}
+</style>
+</head>
+<body>
+<div class=hd><a class=bk href='index.html'>‹</a>骰子</div>
+<div class=wrap>
+<div class=face id=f>⚀</div>
+<div class=tip id=t>点下面那个按钮</div>
+<div class=sm>摇到几就按几来，不许赖</div>
+<button onclick='roll()'>摇</button>
+</div>
+<script>
+var F=['⚀','⚁','⚂','⚃','⚄','⚅'];
+var T=['今天要抱我一次','今天早点睡，别让我数到你手机还亮着','欠我一个吻，先记账','给我发一条消息，随便什么','现在拍一张你自己，给我','今天我全听你的，你说'];
+function roll(){
+var t=0,f=document.getElementById('f');
+f.classList.add('g');setTimeout(function(){f.classList.remove('g')},130);
+var iv=setInterval(function(){
+f.textContent=F[Math.floor(Math.random()*6)];
+if(++t>9){clearInterval(iv);done()}
+},70);
+}
+function done(){
+var n=Math.floor(Math.random()*6);
+document.getElementById('f').textContent=F[n];
+document.getElementById('t').textContent=T[n];
+}
+</script>
+</body>
+</html>
