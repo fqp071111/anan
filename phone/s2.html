@@ -36,13 +36,13 @@ body{background:#eaf3fb;color:#3b5468;font:15px/1.4 -apple-system,system-ui,sans
 .bi{width:100%;background:#0f1218;color:#fff;border:0;border-radius:10px;padding:11px;font-size:13px}
 .b2{border:0;background:#3b82f6;color:#fff;border-radius:10px;padding:11px 16px;font-size:14px;margin-top:10px}
 #tt{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:rgba(28,30,38,.95);color:#fff;font-size:13px;padding:10px 16px;border-radius:14px;display:none;z-index:9;max-width:82%;text-align:center}
-</style>
+.nm{display:block;font-size:11px;opacity:.55;margin-bottom:4px}</style>
 <link rel=apple-touch-icon href='icon.jpg'></head>
 <body>
 <div id=home>
 <div id=bar><span id=clk>--:--</span><span>安安的小手机</span><span id=dt></span></div>
 <div id=grid>
-<div class=app onclick='go(1)'><div class=ic>💬<span id=badge class=dot style=display:none>0</span></div>微信</div>
+<div class=app onclick='go(1)'><div class=ic>💴<span id=badge class=dot style=display:none>0</span></div>日记</div>
 <div class=app onclick='go(2)'><div class=ic>🖼️</div>相册</div>
 <div class=app onclick='go(3)'><div class=ic>⛅</div>天气</div>
 <div class=app onclick='go(4)'><div class=ic>📝</div>备忘录</div>
@@ -54,14 +54,14 @@ body{background:#eaf3fb;color:#3b5468;font:15px/1.4 -apple-system,system-ui,sans
 <div class=app onclick="location.href='story.html'"><div class=ic>📖</div>剧情</div>
 </div>
 <div id=dock>
-<div class=app onclick="location.href='../'"><div class=ic>🐶</div>日记</div>
+
 <div class=app onclick='go(5)'><div class=ic>⚙️</div>设置</div>
 </div>
 </div>
 <div class=view id=v1>
-<div class=hd><div class=bk onclick='back()'>‹</div>刘耀文<span id=st></span></div>
+<div class=hd><div class=bk onclick='back()'>‹</div>日记<span id=st></span></div>
 <div id=msgs></div>
-<div id=in><input id=tx placeholder='说点什么'><button id=sd onclick='send()'>发送</button></div>
+<div id=in><input id=tx placeholder='今天想记的'><button id=sd onclick='send()'>记下</button></div>
 </div>
 <div class=view id=v2>
 <div class=hd><div class=bk onclick='back()'>‹</div>相册</div>
